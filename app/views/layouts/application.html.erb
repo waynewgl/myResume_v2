@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>MyResume</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+
+  <%= javascript_include_tag "fancybox_loader" %>
+  <%= javascript_include_tag "jquery.fancybox-1.3.4.pack" %>
+
+  <%= stylesheet_link_tag "jquery-ui" %>
+
+  <%= redactor_lang('zh_tw') %>
+  <%= csrf_meta_tags %>
+
+
+
+</head>
+
+<body>
+
+
+
+
+<div id="wrapper960" class="clearfix">
+
+
+  <input type="button" id="about_site__button" class="about_site_button_style" value="SITE INSTRUCTION " style="position: relative;left: 550px; top: -120px; font-size: 14px; width:500px; height: 50px;"/>
+
+  <div class="notice_board" id="about_site_block" style="display: none;">
+
+    <ul style="padding: 20px; font-size: 10px;">
+
+
+
+      <li>
+
+        1. The most effective path to your <h4> personalisation CV</h4> with  fancy templates, all you need to do is
+        <h4>  register and login, fill your resume </h4>  , afterwards, you can
+
+      </li>
+
+      <li>
+       <h4> Post your projects, which will automatically be linked to your resume. </h4>
+
+      </li>
+
+      <li>
+
+        Also, <h4> You can leave comments and vote </h4> for other developers' projects...
+
+      </li>
+
+    </ul>
+
+  </div>
+
+
+
+  <%= render :partial => 'partials/site/header' -%>
+
+  <%= yield %>
+
+  <%= render :partial => 'partials/site/footer' -%>
+
+</div>
+</body>
+
+
+
+</html>
+
+
+
+
+<!--<div class="coda-slider"  id="slider-id" >-->
+<!--<div>-->
+<!--<h2 class="title">Panel 1</h2>-->
+<!--<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas metus nulla, commodo a sodales sed, dignissim pretium nunc. Nam et lacus neque. Sed volutpat ante id mauris laoreet vestibulum. Nam blandit felis non neque cursus aliquet. Morbi vel enim dignissim massa dignissim commodo vitae quis tellus. Nunc non mollis nulla. Sed consectetur elit id mi consectetur bibendum. Ut enim massa, sodales tempor convallis et, iaculis ac massa. Etiam suscipit nisl eget lorem pellentesque quis iaculis mi mattis. Aliquam sit amet purus lectus. Maecenas tempor ornare sollicitudin.</p>-->
+<!--</div>-->
+<!--<div>-->
+<!--<h2 class="title">Panel 2</h2>-->
+<!--<p>Proin nec turpis eget dolor dictum lacinia. Nullam nunc magna, tincidunt eu porta in, faucibus sed magna. Suspendisse laoreet ornare ullamcorper. Nulla in tortor nibh. Pellentesque sed est vitae odio vestibulum aliquet in nec leo.</p>-->
+<!--</div>-->
+<!--</div>-->
+
+
+<script>
+    $(function(){
+
+        /* Here is the slider using default settings */
+        $('#slider-id').codaSlider();
+        /* If you want to adjust the settings, you set an option
+         as follows:
+
+         $('#slider-id').codaSlider({
+         autoSlide:true,
+         autoHeight:false
+         });
+
+         */
+
+        <% if  session[:index_page].nil? %>
+
+
+            $("#about_site_block").slideDown(3000);
+
+            setTimeout(function(){
+                $('#about_site_block').slideUp(3000);
+            }, 7000);
+
+
+        <%
+
+        session[:index_page]="no"
+        end%>
+
+
+
+
+
+
+        $('#about_site__button').click(function(e) {
+
+            if ($("#about_site_block").is(":hidden")) {
+                $("#about_site_block").show("slow");
+            } else {
+                $("#about_site_block").slideUp();
+            }
+
+
+        });
+
+    });
+
+</script>

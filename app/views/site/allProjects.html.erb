@@ -1,0 +1,93 @@
+
+
+<% if  !session[:user_login].nil? %>
+
+    <div style="position: relative;top: -100px;right: 50px;">
+
+      <%= render :partial => 'partials/admin/side_bar_menu' -%>
+
+
+    </div>
+
+<%end%>
+
+<div id="tag_cloud">
+
+  <div style="position: relative;left: 7px;">
+
+    <h4>Tag Cloud:</h4> <br/>
+    <h3><%= link_to "All", {:controller =>:site , :action => :allProjects , :all=>true }%></h3>
+
+    <% @tags = ActsAsTaggableOn::Tag.all(:order=>'name')
+
+       if @tags.count > 0 %>
+
+        <% tag_cloud Article.tag_counts, %w[s m l] do |tag, css_class| %>
+            <%= link_to tag.name, { :action => :allProjects, :tag => tag.name }, :class => css_class %>
+        <% end %>
+    <% else %>
+        <p>There are no tags on the system.</p>
+    <% end %>
+
+  </div>
+
+
+</div>
+
+
+<div class="content_allProfile">
+
+
+  <%= render :partial => 'partials/site/allProjectArticles' -%>
+
+
+</div>
+
+<style>
+
+    #tag_cloud {
+        width: 300px;
+        line-height: 1.6em;
+        position: relative;
+        top: 10px;
+        left: 750px;
+        word-wrap: break-word;
+        background-image: url(<%= asset_path 'background_image1.jpg' %>);
+        border-radius: 10px;
+        border:1px solid #2c2b2b;
+        -webkit-box-shadow:0 0 32px #e6e8e8;
+        -moz-box-shadow:0 0 30px #e6e8e8;
+        box-shadow:0 0 30px #e6e8e8;
+        outline: 1px;
+
+
+    }
+
+
+    #tag_cloud a{
+
+
+
+    }
+
+    #tag_cloud a:hover{
+
+         background: #000000;
+
+        color: #ffffff;
+
+        border-radius: 10px;
+        border:1px solid #2c2b2b;
+        -webkit-box-shadow:0 0 32px #e6e8e8;
+        -moz-box-shadow:0 0 30px #e6e8e8;
+        box-shadow:0 0 30px #e6e8e8;
+        outline: 1px;
+
+
+    }
+
+    .s { font-size: 0.8em; }
+    .m { font-size: 1.2em; }
+    .l { font-size: 1.8em; }
+
+</style>

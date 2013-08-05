@@ -1,0 +1,489 @@
+<div class="sideBarMenu">
+
+  <div>
+    <input
+    type="button"
+    name="groovybtn1"
+    id="create_post"
+    class="groovybutton_side"
+    value="New Project"/>
+  </div>
+  <div>
+    <input
+    type="button"
+    name="groovybtn1"
+    id="my_space"
+    class="groovybutton_side"
+    value="My Project Space"/>
+  </div>
+  <div>
+    <input
+    type="button"
+    name="groovybtn1"
+    id="resume_setting"
+    class="groovybutton_side"
+    value="Resume Look"/>
+  </div>
+  <div>
+    <input
+    type="button"
+    name="groovybtn1"
+    id="edit_profile"
+    class="groovybutton_side"
+    value="Edit Resume"/>
+  </div>
+
+
+  <div style="position: relative;top: 5px;right: 40px;">
+
+    <%= link_to(image_tag("shadow.png",  :width => 170, :height => 70)) %>
+
+  </div>
+
+</div>
+
+
+<style type="text/css" xmlns="http://www.w3.org/1999/html">
+
+
+    div.Article {
+        width:35%;
+        border: 1px solid red; }
+    div.Article h2 {
+        border: 1px solid blue; }
+    div.ArticleBody {
+        border: 1px solid black; }
+    div.ArticleFooter {
+        border: 1px solid blue; }
+    div.ArticleFooter p {
+        border: 1px solid magenta; }
+
+
+    input.groovybutton_side
+    {
+        font-size:10px;
+        font-family:Verdana,sans-serif;
+        font-weight:bold;
+        color:#888888;
+        width:100px;
+        position: relative;
+        right: 10px;
+        background-color:transparent;
+        border-style:solid;
+        border-color:#fafafa;
+        border-width:1px;
+    }
+
+    input.groovybutton_side:hover
+    {
+        background:#000000;
+        color: #ffffff;
+
+        border-radius: 10px;
+        border:1px solid #2c2b2b;
+        -webkit-box-shadow:0 0 32px #e6e8e8;
+        -moz-box-shadow:0 0 30px #e6e8e8;
+        box-shadow:0 0 30px #e6e8e8;
+        outline: 1px;
+    }
+
+    .groovy_att_button
+    {
+        font-size:11px;
+        font-family:Verdana,sans-serif;
+        font-weight:bold;
+        color:#888888;
+        width:100px;
+        position: relative;
+        right: 10px;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAIAAADZSiLoAAAAHElEQVQIHWP48+fP9+/f////zwCkgBwQC4ghAACODRqkCkEF0QAAAABJRU5ErkJggg==); /* Can replace this with any pattern or color */
+        border-radius: 1px;
+        border:1px solid #2c2b2b;
+        -webkit-box-shadow:0 0 32px #e6e8e8;
+        -moz-box-shadow:0 0 30px #e6e8e8;
+        box-shadow:0 0 30px #e6e8e8;
+        outline: 1px;
+    }
+
+    .groovy_att_button:hover
+    {
+        background:#000000;
+        color: #ffffff;
+
+        border-radius: 2px;
+        border:1px solid #2c2b2b;
+        -webkit-box-shadow:0 0 32px #e6e8e8;
+        -moz-box-shadow:0 0 30px #e6e8e8;
+        box-shadow:0 0 30px #e6e8e8;
+        outline: 1px;
+    }
+
+    .spinner {
+        position: relative;
+        left: 100px;
+        bottom: 50px;
+        margin-left: -32px; /* -1 * image width / 2 */
+        margin-top: -32px;  /* -1 * image height / 2 */
+        z-index: 99999999;
+    }
+
+
+</style>
+
+
+<script type="text/javascript" xmlns="http://www.w3.org/1999/html">
+
+    $(document).ready(function () {
+
+
+        $("#accordion").accordion();
+
+
+
+        var opts = {
+            lines: 13, // The number of lines to draw
+            length: 7, // The length of each line
+            width: 4, // The line thickness
+            radius: 10, // The radius of the inner circle
+            corners: 1, // Corner roundness (0..1)
+            rotate: 0, // The rotation offset
+            color: '#000', // #rgb or #rrggbb
+            speed: 1, // Rounds per second
+            trail: 60, // Afterglow percentage
+            shadow: false, // Whether to render a shadow
+            hwaccel: false, // Whether to use hardware acceleration
+            className: 'spinner', // The CSS class to assign to the spinner
+            zIndex: 2e9, // The z-index (defaults to 2000000000)
+            top: 'auto', // Top position relative to parent in px
+            left: 'auto' // Left position relative to parent in px
+        };
+        var target = document.getElementById('spinner_article');
+        var target_image = document.getElementById('spinner_article_image');
+
+        var spinner;
+
+
+
+
+
+        $('#add_att_button').click(function(event) {
+
+            // check if file-field empty
+            var stat = true;
+
+            if ($("#attachment_attfile").val() == "") {
+                stat = false;
+            }
+            var att_error = document.getElementById('att_error');
+            if (!stat) {
+                $("#att_error").html("Please select file or image.");
+                att_error.style.display ="";
+            }
+            else{
+
+                spinner = new Spinner(opts).spin(target_image);
+                target_image.appendChild(spinner.el);
+
+                att_error.style.display ="none";
+                // check whether article already exists and has to be updated
+                var article_id = 0;
+                if ($('#article_id').val() != ''){
+                    article_id = $('#article_id').val()
+                }
+                $('#attachment_form').ajaxSubmit({
+                    data:{article_id: article_id},
+                    success: function(data) {
+                        var response = JSON.parse(data);
+                        if (response.message == 'attachment is created') {
+
+                            spinner.stop();
+//                            var att_error = document.getElementById('att_error');
+//                            $("#att_error").html(response.message + response.article_id);
+//                            att_error.style.display ="";
+                            $("#article_id").val(response.article_id);
+                            // clear fields
+                            $('#attachment_attfile').val('');
+                            $('#attachment_title').val('');
+
+                            var loadUrl = "/admin/load_atts_for_article?article_id="+response.article_id;
+                            $("#image_preview").load(loadUrl);
+
+                        }
+                        else{
+                            spinner.stop();
+                            var att_error = document.getElementById('att_error');
+                            $("#att_error").html(response.message);
+                            att_error.style.display ="";
+                        }
+                    }
+                });
+            }
+            return false;
+
+        });
+
+
+        $('#edit_profile').click(function(e) {
+
+
+            window.location = "/admin/edit_profile";
+
+
+        });
+
+
+        $('#resume_setting').click(function(e) {
+
+
+            window.location = "/resume/index?user="+ <%=session[:user_login_id] %>;
+
+
+        });
+
+
+        $('#my_space').click(function(e) {
+
+
+            window.location = "/admin/myProject";
+
+
+        });
+
+
+        $('#article_close_image').click(function(e) {
+
+
+            var article_id = $('#article_id').val();
+
+
+            if (article_id >0){
+
+                $.ajax({
+                    type:'POST',
+                    url:'/admin/delete_article',
+                    data:{article_id: article_id},
+                    success:function (data) {
+                        if (data == 'OK') {
+
+                            $('#article_post').trigger('close');
+
+
+
+                        } else {
+
+                            $('#article_post').trigger('close');
+
+
+                        }
+                    }
+                });
+                return false;
+
+            }
+            else{
+
+
+                $('#article_post').trigger('close');
+
+                return false;
+
+
+            }
+
+
+        }) ;
+
+
+        $('#create_post').click(function(e) {
+            $('#article_post').lightbox_me({
+                centered: true,
+                closeClick:false,
+                appearEffect:"fadeIn",
+                onLoad: function() {
+                    $('#article_post').find('input:first').focus()
+                }
+            });
+
+            e.preventDefault();
+        });
+
+
+
+        $('#post_article_button').click(function() {
+
+            var stat = check_options_if_empty();
+
+            var article_error = document.getElementById('article_error');
+
+            if (!stat) {
+
+                $("#article_error").html("Please provide input for all relevant options.");
+
+                article_error.style.display ="";
+            }
+            else if (!$('#redactor_content').getCode()){
+
+                $("#article_error").html("Please provide some content for your article");
+
+                article_error.style.display ="";
+            }
+            else{
+
+                spinner = new Spinner(opts).spin(target);
+                target.appendChild(spinner.el);
+
+                var article_error = document.getElementById('article_error');
+
+                $("#article_error").html("Creating....");
+
+                article_error.style.display ="";
+
+                save_article();
+            }
+
+            return false;
+        });
+
+
+
+        function save_article() {
+
+
+            $.ajax({
+                type:'POST',
+                url:'/admin/create_article',
+                data:{
+                    article_id:$("#article_id").val(),
+                    article_title: $('#article_title').val(),
+                    article_tag:$('#article_tag').val(),
+                    article_content:$('#redactor_content').getCode()
+                },
+                success:function (data) {
+
+
+                    if (data == 'Article is created'||data=='Article is created with image attached') {
+                        spinner.stop();
+                        window.location = window.location.pathname;
+
+                    }
+                    else {
+
+                        spinner.stop();
+
+                        var article_error = document.getElementById('article_error');
+
+                        $("#article_error").html("article cannot be created...");
+
+                        article_error.style.display ="";
+
+
+                    }
+                }
+            });
+
+
+        }
+
+
+        // checks whether relevant option fields are empty
+        function check_options_if_empty() {
+            var stat = true;
+
+            $("#article_fields").find(':input').each(function () {
+                if ($(this).val() == "" ) {
+                    stat = false;
+                }
+            });
+
+            return stat;
+        }
+
+    });
+
+
+
+</script>
+
+
+
+<div id="article_post" class="create_article_post"  style="display: none;">
+
+  <div id="article_error" style="width: 400px; height: 20px; position: relative;top: 10px; left: 70px; display:none;border: 1px solid gray;">     <br/></div>
+
+
+  <div id="article_fields" class="article_post_form">
+
+    <div>
+      <h4>Project Title:</h4>
+      <input style="position: relative;left: 110px; top: -24px;" type='text' name='article_title' id='article_title' placeholder='   Title'/></td>
+    </div>
+
+
+    <div  style="position: relative;left: 310px; top: -48px;">
+      <h4>Tag:</h4>
+      <input style="position: relative;left: 50px; top: -22px;" type='text' name='article_tag' id='article_tag' placeholder='   Java,Ruby,Objective c..etc' size="30"/>
+    </div>
+    <div style="width: 600px;">
+      <textarea class= "redactor" id="redactor_content" rows="10" cols="10 " ></textarea>
+    </div>
+
+
+    <br/><br/>
+
+    <div style="position: relative;bottom: 70px;left: 240px;">
+
+
+      <%= link_to(image_tag("close_pop.png",:id=>"article_close_image", :alt => "", :width => 50, :height => 50, :style=>"position: absolute; bottom: 470px; left: 369px;")) %>
+
+
+      <input
+      type="button"
+      name="groovybtn1"
+      id="post_article_button"
+      class="groovybutton"
+      style="position: relative;bottom: -50px;"
+      value="Post"/>
+
+
+      <div id="spinner_article" class="spinner" >
+
+      </div>
+
+    </div>
+
+
+  </div>
+
+  <button  class="groovy_att_button" style="width: 170px; position: relative;bottom: 480px;left: 675px;" id="add_att_button">Add file or image</button>
+
+
+  <div class="article_attachments" id="attachment_upload" style="overflow: scroll; width: 200px; height: 400px;">
+
+
+    <%= form_for :attachment, :url => {:controller => :admin,:action => :add_attachment},:html => {:multipart => true, :remote => true , :id => "attachment_form"} do |f| %>
+
+        <%= f.label :title , "Title:"%> <p style="width: 40px;"> <%= f.text_field :title, :placeholder => "Type title here (optional)" %> </p>
+        <p style="position: relative;top: 10px; width: 30px; word-wrap: break-word;"><%= f.file_field :attfile%></p>
+
+
+    <% end %>
+
+
+
+    <div id="att_error" style="position: relative; top: 20px;  display:none;border: 1px solid gray; padding:4px 4px 4px 4px;">     <br/></div>
+
+    <div id="image_preview" style="position: relative; top: 40px;">
+
+
+    </div>
+
+
+    <div id="spinner_article_image" class="spinner">
+
+    </div>
+  </div>
+
+  <input id="article_id" type="hidden" name="article_id" value="">
+
+
+</div>

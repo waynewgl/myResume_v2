@@ -1,0 +1,327 @@
+
+
+
+
+
+<div style="position: relative; left: 50px; width: 680px; top: 15px;">
+
+
+  <div id="tag_cloud_myProject">
+
+    <div style="position: relative;left: 6px; ">
+
+      <h4>Tag Cloud:</h4> <br/>
+      <h3><%= link_to "All", {:controller =>:admin , :action => :myProject , :all=>true }%></h3>
+
+      <% @tags = ActsAsTaggableOn::Tag.all(:order=>'name')
+
+         if @tags.count > 0 %>
+
+          <% tag_cloud Article.tag_counts, %w[s m l] do |tag, css_class| %>
+              <%= link_to tag.name, { :controller =>:admin ,:action => :myProject, :tag => tag.name }, :class => css_class %>
+          <% end %>
+      <% else %>
+          <p>No Tags</p>
+      <% end %>
+
+    </div>
+
+
+  </div>
+  <%for article in @user_articles %>
+
+
+
+
+        </br>
+
+        <div class="articleContentBlock" >
+
+
+           <div class="art_delete_div_<%=article.id%>">
+
+             <input type="button" id="art_delete_<%=article.id%>" value="X" class="comments" style="width:20px; position: relative;left: -10px; top: -20px;">
+
+           </div>
+
+
+
+          <div id="spinner_article_delete_<%=article.id%>" class="spinner" style="position: relative;top: -30px;" >
+
+          </div>
+
+          <% if !article.created_at.nil? %>
+
+            <div style="padding: 10px;font-family:'Droid Sans',Tahoma,Arial,sans-serif;font-size:13px;">
+
+              <p style=" width: 200px; word-wrap: break-word;position: relative;left: 300px; top: 1px;">   Created at : <%= article.created_at.to_s.split(" ")[0] %> </p>
+
+              <p style=" width: 100px; word-wrap: break-word;position: relative;left: 480px; top: -20px;">
+
+                Tags: <%= raw article.tag %>
+
+              </p>
+
+              </div>
+          <%end%>
+
+          <div class="article_content_title_style">
+            <p >
+                Title : <%= article.title %>
+            </p>
+          </div> </br>
+
+          <div id="article_content_html_<%= article.id %>" style="  word-wrap: break-word; border-top: 1px solid #000000;">
+
+
+                  <%=raw truncate strip_tags(article.content.strip.to_s) , :length=>300%>
+
+
+          </div>
+
+
+          </br>
+
+
+          <% images = article.attachments.where("attfile_content_type like ?","image%") %>
+
+          <!--if more then one image then show thumb images after text -->
+          <% if (!images.nil?) %>
+
+
+              <div id="gallery_wrapper" style="margin-top: 20px;">
+                <p>Attached files: </p></br>
+
+                <div id="gallery" >
+
+                  <% for img in images %>
+
+                      <div  style="position: relative;left: 20px;
+                              float:left;
+                              margin-right:3.80%;
+                              margin-bottom:20px;;">
+                        <%#= link_to image_tag("/attachments/#{img.id}/#{true}",:alt => img.data_file_name), "/" + t('admin.att-upload-dir') + "#{img.id}/" + img.data_file_name , :title => img.data_file_name , :class => "example2" %>
+                        <%= link_to image_tag(img.attfile.url(:thumb),:alt => img.attfile_file_name), "/" + t('admin.att-upload-dir') + "#{img.id}/content_" + img.attfile_file_name , :title => img.title.blank? ? img.attfile_file_name : img.title, :class => "myFancybox2" %>
+
+                      </div>
+
+                  <% end  %>
+
+                </div>
+
+              </div>
+          <% end  %>
+
+
+          <% files = article.attachments.where("attfile_content_type not like ?","image%") %>
+
+          <% if (!files.nil?) %>
+              <br/>
+              <% for f in files %>
+                  <% title = f.title.blank? ? f.attfile_file_name : f.title %>
+                  <%#= image_tag "/attachments/#{img.id}/false", :alt => img.data_file_name, :width => (img.width.blank?) ? "100%" : "#{[img.width,450].min}px",:class => 'img_radius' %>
+                  <%= link_to content_tag(:span) + image_tag("images/pdf_icon_tiny.jpg", :alt => "Download PDF " + title , :width => "20px", :style => "float:left;" ) + title , f.attfile.url  %> <br /><br />
+              <% end  %>
+          <% end  %>
+
+
+
+          <div style="position: relative; top: 170px;">
+
+
+            <div style="position: relative;left:20px; top: -165px;width:120px;height:20px" class="comments_button_style">
+
+
+              <%= link_to "#{article.comments.count} comments", url_for(:controller => :site, :action => :article_detail, :article_info=>article.id, :commentShow=>"true"),:style=>"padding:19px;"%>
+
+            </div>
+
+            <p style="padding:1px;position: relative;left:20px; top: -160px;width:120px;height:20px"  class="comments_button_style">
+
+              <%= article.likes.size %>  people like it
+
+            </p>
+            <p style="padding:1px;font-size: 9px; position: relative;left:20px; top: -157px;width:120px;height:20px; word-wrap: break-word;"  class="comments_button_style">
+
+              <%= article.dislikes.size %>  people don't like it
+
+            </p>
+
+          </div>
+
+          <div class="arrow_edit_<%= article.id %>" style="position: relative;left: 550px;">
+
+            <%= link_to image_tag("nav_right.png", :width => "40px"),{:controller=>"admin", :action => :myArticle_detail,:article_info=>article.id}, :title => "Edit Article" %>
+
+
+          </div>
+
+
+        </div>
+
+
+        </br>
+  <%end%>
+
+
+
+    <div style="position: relative;left: 200px;">
+
+      <%= will_paginate @user_articles ,:class => 'digg_pagination'%>
+
+    </div>
+
+
+
+</div>
+
+
+
+  <script type="text/javascript">
+      $(document).ready(function(){
+
+
+
+          var opts = {
+              lines: 13, // The number of lines to draw
+              length: 7, // The length of each line
+              width: 4, // The line thickness
+              radius: 10, // The radius of the inner circle
+              corners: 1, // Corner roundness (0..1)
+              rotate: 0, // The rotation offset
+              color: '#000', // #rgb or #rrggbb
+              speed: 1, // Rounds per second
+              trail: 60, // Afterglow percentage
+              shadow: false, // Whether to render a shadow
+              hwaccel: false, // Whether to use hardware acceleration
+              className: 'spinner', // The CSS class to assign to the spinner
+              zIndex: 2e9, // The z-index (defaults to 2000000000)
+              top: 'auto', // Top position relative to parent in px
+              left: 'auto' // Left position relative to parent in px
+          };
+
+
+
+          <%for article in @user_articles %>
+
+
+              var target_<%=article.id%> = document.getElementById('spinner_article_delete_<%=article.id%>');
+
+              var spinner_<%=article.id%>;
+
+              $(".arrow_edit_<%= article.id %> a").append("<em></em>");
+
+              $(".arrow_edit_<%= article.id %> a").hover(function() {
+
+                  $(this).find("em").animate({opacity: "show", top: "-75"}, "slow");
+                  var hoverText = $(this).attr("title");
+                  $(this).find("em").text("Edit Article");
+              }, function() {
+                  $(this).find("em").animate({opacity: "hide", top: "-85"}, "fast");
+              });
+
+
+
+
+          $(".art_delete_div_<%=article.id%>").append("<em></em>");
+
+          $(".art_delete_div_<%=article.id%>").hover(function() {
+              $(this).find("em").animate({opacity: "show", top: "-405", left:"-70"}, "slow");
+              var hoverText = $(this).attr("title");
+              $(this).find("em").text("Delete article");
+          }, function() {
+              $(this).find("em").animate({opacity: "hide", top: "-400",left:"-70"}, "fast");
+          });
+
+
+          $('#art_delete_<%=article.id%>').click(function(){
+
+                  var articleId = <%= article.id %>
+
+                  spinner_<%=article.id%>= new Spinner(opts).spin(target_<%=article.id%>);
+                  target_<%=article.id%>.appendChild(spinner_<%=article.id%>.el);
+
+
+                  $.ajax({
+                      type:'POST',
+                      url:'/admin/delete_article',
+                      data:{article_id: articleId},
+                      success:function (data) {
+                          if (data == 'OK') {
+
+                              window.location = "myProject";
+
+                              spinner_<%=article.id%>.stop();
+
+
+                          } else {
+
+                              spinner_<%=article.id%>.stop();
+                              alert(data);
+                          }
+                      }
+                  });
+                  return false;
+              });
+
+
+
+
+
+         <%end%>
+
+
+
+
+      });
+  </script>
+
+
+<style>
+
+    #tag_cloud_myProject {
+        width: 300px;
+        line-height: 1.6em;
+        position: absolute;
+        top: -80px;
+        left: 640px;
+        word-wrap: break-word;
+        background-image: url(<%= asset_path 'background_image1.jpg' %>);
+        border-radius: 10px;
+        border:1px solid #2c2b2b;
+        -webkit-box-shadow:0 0 32px #e6e8e8;
+        -moz-box-shadow:0 0 30px #e6e8e8;
+        box-shadow:0 0 30px #e6e8e8;
+        outline: 1px;
+
+
+    }
+
+
+    #tag_cloud_myProject a{
+
+
+
+    }
+
+    #tag_cloud_myProject a:hover{
+
+        background: #000000;
+
+        color: #ffffff;
+
+        border-radius: 10px;
+        border:1px solid #2c2b2b;
+        -webkit-box-shadow:0 0 32px #e6e8e8;
+        -moz-box-shadow:0 0 30px #e6e8e8;
+        box-shadow:0 0 30px #e6e8e8;
+        outline: 1px;
+
+
+    }
+
+    .s { font-size: 0.8em; }
+    .m { font-size: 1.2em; }
+    .l { font-size: 1.8em; }
+
+</style>

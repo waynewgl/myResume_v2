@@ -1,0 +1,188 @@
+
+
+    <div id="tag_cloud_resume">
+
+      <div style="position: relative;left: 3px;">
+
+        <h4>CV Cloud:</h4> <br/>
+        <h3><%= link_to "All", {:controller =>:site , :action => :index , :all=>true }%></h3>
+
+            <% @tags = ActsAsTaggableOn::Tag.all(:order=>'name')
+
+               if @tags.count > 0 %>
+
+                <% tag_cloud User.tag_counts, %w[s m l] do |tag, css_class| %>
+                    <%= link_to tag.name, { :action => :index, :tag => tag.name }, :class => css_class %>
+                <% end %>
+            <% else %>
+                <p>No tags</p>
+            <% end %>
+
+          </div>
+
+
+        </div>
+
+
+
+
+        <div id="content_profile" class="clearfix shadow">
+          <h3  style="border-bottom: 1px solid #000000;"> Developers' Resumes </h3>
+
+
+
+
+          <%for user_resume in @usersResumes %>
+
+              <% if !user_resume.intro.nil?  %>
+
+                <div class="index_blocks">
+                    <p style="position: relative;left: 10px; ">
+
+                      <% if !user_resume.avatar_file_name.nil?  %>
+
+                        <div id="gallery_wrapper" style=" position: relative;top: 130px; width:130px;">
+
+                          <%= link_to image_tag(user_resume.avatar.url(:small)),"/" + t('admin.avatar-upload-dir') + "#{user_resume.id}/content_" + user_resume.avatar_file_name, :title => user_resume.avatar_file_name , :class => "myFancybox2" %>
+
+                        </div>
+
+                        <% end %>
+
+
+                             </p>
+
+
+                        <div style="position: relative; left: 200px; width: 400px; word-wrap: break-word;">
+
+                          <h4>Name:</h4>  <%= raw user_resume.name %>  <br/>    <br/>
+
+                          <h4>Professional Profile:</h4>
+
+                          <div style=" word-wrap: break-word; width: 300px;">
+
+                            <%= raw truncate( user_resume.intro.strip, :length=>200) %>
+
+                          </div>
+
+                          <br/>
+                          <% if  !user_resume.skills.nil? && user_resume.skills!=";" %>
+
+                            <h4>Skills:</h4>  <br/><%= raw user_resume.skills.gsub(";", ' . ') %>
+                          <%end%>
+                        </div>
+
+                        <div class="arrow"  style="position: relative; left: -400px; top: 20px; ">
+
+                          <%= link_to image_tag("nav_right.png", :width => "40px"), {:controller=>"resume", :action=>"index", :user=>user_resume.id},:title => "View detail" ,:style => "position:relative;left:960px;top:-30px;height:30px;" %>
+
+
+                         </div>
+
+
+                         <div id="user_projects_list" class="project_button_style_user" style=" height: 20px; width: 150px; position: relative; top: -80px;">
+
+                            <p>
+
+                              <%= link_to "#{user_resume.articles.count } projects published", {:controller=>"site", :action=>"allProjects", :user_project_id=>user_resume.id},:title => "click to see then all", :style=>" height:20px;width:150px; word_wrap:break_word;" %>
+                            </p>
+
+
+
+
+                          </div>
+
+                    </div>
+                  <%end%>
+              <br/>
+
+
+
+
+          <%end%>
+
+           <div style="position: relative;left: 200px;">
+
+             <%= will_paginate @usersResumes, :class => 'digg_pagination' %>
+
+           </div>
+
+
+        </div>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+
+
+
+
+
+
+        $(".arrow a").append("<em></em>");
+
+        $(".arrow a").hover(function() {
+            $(this).find("em").animate({opacity: "show", top: "-75"}, "slow");
+            var hoverText = $(this).attr("title");
+            $(this).find("em").text(hoverText);
+        }, function() {
+            $(this).find("em").animate({opacity: "hide", top: "-85"}, "fast");
+        });
+
+
+    });
+</script>
+
+
+ <style>
+
+     #tag_cloud_resume {
+         width: 300px;
+         line-height: 1.6em;
+         position: relative;
+         left: 730px;
+         top: -50px;
+         word-wrap: break-word;
+         background-image: url(<%= asset_path 'background_image1.jpg' %>);
+         border-radius: 10px;
+         border:1px solid #2c2b2b;
+         -webkit-box-shadow:0 0 32px #e6e8e8;
+         -moz-box-shadow:0 0 30px #e6e8e8;
+         box-shadow:0 0 30px #e6e8e8;
+         outline: 1px;
+
+
+     }
+
+
+     #tag_cloud_resume a{
+
+
+
+     }
+
+     #tag_cloud_resume a:hover{
+
+         background: #000000;
+
+         color: #ffffff;
+
+         border-radius: 10px;
+         border:1px solid #2c2b2b;
+         -webkit-box-shadow:0 0 32px #e6e8e8;
+         -moz-box-shadow:0 0 30px #e6e8e8;
+         box-shadow:0 0 30px #e6e8e8;
+         outline: 1px;
+
+
+     }
+
+     .s { font-size: 0.8em; }
+     .m { font-size: 1.2em; }
+     .l { font-size: 1.8em; }
+
+
+ </style>

@@ -1,0 +1,12 @@
+<ul>
+  <li><%= link_to "Home", url_for(:controller => :site, :action => :index)%></li>
+  <li><%= link_to "Projects' Circle", url_for(:controller => :site, :action => :allProjects)%></li>
+  <% if !session[:user_login].nil? &&!session[:user_login_id].nil?  %>
+      <li><%= link_to "Resume Setting", {:controller => :admin, :action => :edit_profile, :user=>session[:user_login_id]} ,:id=>"bg_flash"%></li>
+  <% end %>
+  <% if !session[:user_login].nil? %>
+      <li><%= link_to "My Space", {:controller => :admin, :action => :myProject}, :id=>"bg_flash2" %></li>
+  <% end %>
+  <li><%= link_to "Contact Me", {:controller => :resume, :action => :index, :user=>1} ,:id=>"bg_flash"%></li>
+
+</ul>

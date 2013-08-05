@@ -1,0 +1,100 @@
+<style>
+
+  .slder_header_title{
+
+
+      width: 1000px;
+      position: relative;
+      left: 0px;
+      font-family:Lucida Console;
+      font-style: italic;
+
+  }
+
+
+</style>
+
+
+
+<div>
+
+
+    <div id="slidorion" >
+
+      <!--<div class="slder_header_title" >-->
+
+        <!--<p style="font-weight: bold; color:#000000;position: relative;left: 250px;">The most popular projects. Please click image to see the detail</p>-->
+
+
+      <!--</div>-->
+
+
+      <div id="slider">
+
+            <%for article in @user_articles_images %>
+
+
+                <% if !article[:image].nil? %>
+
+                        <div id="slide<%= @count%>" class="slide">
+
+                          <%= link_to image_tag(article[:image], :alt => "home image", :width => 600, :height => 400), {:controller=>"site", :action => :article_detail,:article_info=>article[:article][:id]} %>
+
+                        </div>
+
+                    <% @count = @count+1 %>
+
+                <%else%>
+
+                        <div id="slide<%= @count%>" class="slide">
+
+                          <%= link_to image_tag("images/bg.jpg", :alt => "home image", :width => 600, :height => 400) %>
+
+                        </div>
+                    <% @count = @count+1 %>
+                <%end%>
+
+
+            <% end %>
+       </div>
+
+        <div class="accordion_block" style="height: 280px; width: 400px; overflow: scroll;">
+
+          <div id="accordion">
+
+            <%for article in @user_articles_images %>
+
+
+                <div class="link-header"><%=article[:title] %>  (Author: <%=article[:owner] %> ) </br> Created at  <%= article[:created_at] %></div>
+                <div class="link-content">
+                  <%=raw article[:content] %>
+                </div>
+
+            <%end%>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+
+
+</div>
+
+<%= render :partial => 'partials/site/content' -%>
+
+
+<script type="text/javascript">
+    $(function() {
+        $('#slidorion').slidorion({
+            interval: 8000,
+            effect: 'slideRandom'
+        });
+    });
+</script>
+
+
+
+

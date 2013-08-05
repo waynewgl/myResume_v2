@@ -1,0 +1,577 @@
+
+
+<div id="toplinks" style="background-image: url(<%= asset_path 'header_bg.png' %>);">
+
+
+  <div class="clearfixTitle" >
+
+
+
+
+    <div class="titleLeftImage">
+                <%= link_to(image_tag("arrow-prev.png", :alt => "#", :width => 20, :height => 100)) %>
+        </div>
+        <% if  session[:user_login].nil? %>
+
+
+                  <h3 style=" font-family:'Droid Sans',Verdana,Tahoma,sans-serif;
+                          color:#ffffff; position: relative;left: 40px;top: -70px;"><%= link_to "#{t('admin.home_title')}", url_for(:controller => :site, :action => :index), :title=>"testing", :class=>"site_intro"%></h3>
+
+
+        <%else%>
+
+            <h3 style="color:#797777; position: relative;left: 50px;top: -60px;"><%= link_to "Welcome #{session[:user_account_name]} ", url_for(:controller => :admin, :action => :myProject)%></h3>
+
+      <%end%>
+        <div class="titleRightImage">
+            <%= link_to(image_tag("arrow-next.png", :alt => "#", :width => 20, :height => 100)) %>
+         </div>
+
+        <div style="position: relative;top: -150px;right: 20px;">
+
+          <%= link_to(image_tag("shadow.png", :alt => "#", :width => 390, :height => 60)) %>
+
+        </div>
+  </div>
+
+  <div style="  position: relative;top: -15px; ">
+
+    <ul class="">
+      <li>
+
+        <% if  session[:user_login].nil? %>
+
+            <input class="groovybutton_register " type="button" href="#" id="user_login" value="Sign in"/>
+
+        <% else %>
+            <p><h4><%= link_to "Resume Setting: #{session[:user_login]}", url_for(:controller => :admin, :action => :edit_profile) , :style=>"color:black;"%> </h4>   </p>
+            <p><%= link_to "Log out", url_for(:controller => :admin, :action => :logout), :style=>"color:black;" %></p>
+
+        <% end%>
+
+      </li>
+
+      <% if  session[:user_login].nil? %>
+
+          <li>
+
+
+            <div>
+
+              <input
+              type="button"
+              name="groovybtn1"
+              id="register_button"
+              class="groovybutton_register"
+              value="Register"/>
+            </div>
+
+
+
+          </li>
+
+      <% end %>
+
+    </ul>
+  </div>
+</div>
+
+
+<div id="header" class="clearfix shadow"  style="position: relative;top: 40px;">
+
+   <% if !session[:user_login].nil? &&!session[:user_login_id].nil?  %>
+      <div id="nav" class="clearfix" style="position: relative;right: 200px; width: 650px;" >
+        <%= render :partial => 'partials/site/menuBar' %>
+      </div>
+
+<%else%>
+
+        <div id="nav" class="clearfix" style="position: relative;right: 200px; width: 500px;" >
+
+          <%= render :partial => 'partials/site/menuBar' %>
+        </div>
+
+<% end %>
+
+
+
+
+</div>
+
+
+<div class="container"  id="login_form" style="display: none;" >
+
+  <div id="spinner_login" class="spinner" style="position: relative;top: 10px;" >
+
+  </div>
+
+  <form class="login" id="login_fields" >
+
+
+
+    <div id='loginError' style="width:300px; display:none;border: 1px solid #bbb; padding:4px 4px 4px 4px;"></div>
+
+    <h1>User Log in <%= link_to(image_tag("close_pop.png",:id=>"close_image_login", :alt => "", :width => 50, :height => 50, :style=>"position:relative;left:80px; top:-30px;")) %></h1>
+
+
+    <table border="0">
+
+      <tr>
+        <td> <h4>Login :</h4></td>
+        <td>
+          <input type='text' name='user_login_name' id='user_login_name' placeholder='login' /> <br/>
+        </td>
+      </tr>
+
+      <tr>
+        <td><h4>Password :</h4></td>
+        <td>
+          <input type="password"  name='user_login_password' id='user_login_password' placeholder="Password" required="">
+        </td>
+      </tr>
+    </table>
+
+    <input type="button" id="login_start" value="Sign in" class="groovybutton" style="width: 300px;"/>
+
+  </form><!-- .login -->
+
+
+</div><!-- .container -->
+
+
+
+<div class="container"  id="register_form" style="display: none;" >
+
+
+  <div id="spinner_register" class="spinner" style="position: relative;top: 10px;">
+
+  </div>
+
+  <form class="login" id="account_fields" >
+
+
+    <div id='account-error' style="width:300px; display:none;border: 1px solid #bbb; padding:4px 4px 4px 4px;"></div>
+
+    <h1>User Register <%= link_to(image_tag("close_pop.png",:id=>"close_image_register", :alt => "", :width => 50, :height => 50, :style=>"position:relative;left:80px; top:-30px;")) %></h1>
+
+
+    <table border="0">
+
+         <tr>
+           <td> <h4>Login :</h4></td>
+           <td>
+             <input type='text' name='account_login' id='account_login' placeholder='login' /> <br/>
+           </td>
+         </tr>
+
+         <tr>
+           <td><h4>Email :</h4></td>
+           <td>
+             <input type="email"  name='email' id='email' placeholder="abc@cde.com" required="">
+           </td>
+         </tr>
+         <tr>
+           <td><h4>Password :</h4></td>
+           <td>
+             <input type="password"  name='account_password' id='account_password' placeholder="Password" required="">
+           </td>
+         </tr>
+         <tr>
+           <td><h4>Password Again :</h4></td>
+           <td>
+             <input type="password" name='account_password_repeat' id='account_password_repeat' placeholder="Password Again" required="" onChange="checkPasswordMatch();">
+           </td>
+         </tr>
+    </table>
+
+    <div id="divCheckPasswordMatch" style="position: relative; left: 50px;">
+    </div>
+    <input type="button" id="register_submit" value="Register" class="groovybutton" style="width: 300px;"/>
+  </form><!-- .register -->
+
+
+</div><!-- .container -->
+
+
+
+
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+
+
+        var opts = {
+            lines: 13, // The number of lines to draw
+            length: 7, // The length of each line
+            width: 4, // The line thickness
+            radius: 10, // The radius of the inner circle
+            corners: 1, // Corner roundness (0..1)
+            rotate: 0, // The rotation offset
+            color: '#000', // #rgb or #rrggbb
+            speed: 1, // Rounds per second
+            trail: 60, // Afterglow percentage
+            shadow: false, // Whether to render a shadow
+            hwaccel: false, // Whether to use hardware acceleration
+            className: 'spinner', // The CSS class to assign to the spinner
+            zIndex: 2e9, // The z-index (defaults to 2000000000)
+            top: 'auto', // Top position relative to parent in px
+            left: 'auto' // Left position relative to parent in px
+        };
+        var target_login = document.getElementById('spinner_login');
+        var target_register  = document.getElementById('spinner_register');
+
+        var spinner;
+
+
+
+
+
+        $("#bg_flash").effect("slide", 1000);
+        $("#bg_flash2").effect("slide", 1000);
+
+        $('#register_button').click(function(e) {
+            $('#register_form').lightbox_me({
+                centered: true,
+                onLoad: function() {
+                    $('#register_form').find('input:first').focus(),
+                    $('#register_form').draggable()
+                }
+            });
+            e.preventDefault();
+        });
+
+
+        $('#user_login').click(function(e) {
+            $('#login_form').lightbox_me({
+                centered: true,
+                onLoad: function() {
+                    $('#login_form').find('input:first').focus(),
+                    $('#login_form').draggable()
+                }
+            });
+            e.preventDefault();
+        });
+
+        $("#account_password_repeat").keyup(checkPasswordMatch);
+        $("#account_password").keyup(checkPasswordMatch);
+
+
+        $('#register_submit').click(function() {
+
+            var stat = check_options_if_empty();
+
+            var account_error = document.getElementById('account-error');
+
+            var checkPasswordsMatchStatus = $('#divCheckPasswordMatch').val();
+
+            if (!stat) {
+
+                $("#account-error").html("Please provide input for all relevant options.");
+
+                account_error.style.display ="";
+                $("#account-error").html(data);
+
+
+            }
+            else if(!isValidEmailAddress( $('#email').val())){
+
+                $("#account-error").html("Please provide valid email address.");
+
+                account_error.style.display ="";
+            }
+            else{
+
+                if(checkPasswordsMatchStatus==""){
+
+                    $("#divCheckPasswordMatch").html("Passwords do not match!Buddy...");
+
+                }
+                else{
+                    save_account();
+
+                }
+            }
+
+            return false;
+        });
+
+
+
+        function save_account() {
+
+            spinner = new Spinner(opts).spin(target_register);
+            target_register.appendChild(spinner.el);
+
+
+            $.ajax({
+                type:'POST',
+                url:'/admin/create_account',
+                data:{
+                    login: $('#account_login').val(),
+                    password: $('#account_password').val(),
+                    password_repeat: $('#account_password_repeat').val(),
+                    email: $('#email').val()},
+                success:function (data) {
+                    if (data == 'AccountOK') {
+
+                        spinner.stop();
+                        var account_error = document.getElementById('account-error');
+
+                        $("#account-error").html("Account created");
+
+                        account_error.style.display ="";
+
+                        $('#account_login').val('');
+                        $('#account_name').val('');
+                        $('#account_password').val('') ;
+                        $('#account_password_repeat').val('');
+                        $('#email').val('');
+
+                        window.location = "/admin/edit_profile"
+
+
+                    }
+                    else {
+
+                        spinner.stop();
+
+                        var account_error = document.getElementById('account-error');
+
+                        $("#account-error").html(data);
+
+                        account_error.style.display ="";
+
+
+                    }
+                }
+            });
+
+
+        }
+
+        // checks whether relevant option fields are empty
+        function check_options_if_empty() {
+            var stat = true;
+
+            $("#account_fields").find(':input').each(function () {
+                if ($(this).val() == "" ) {
+                    stat = false;
+                }
+            });
+
+            return stat;
+        }
+
+
+
+        $('#close_image_login').click(function(e) {
+
+            $('#login_fields').trigger('close');
+
+            e.preventDefault();
+
+
+        })
+
+        $('#close_image_register').click(function(e) {
+
+            $('#account_fields').trigger('close');
+
+            e.preventDefault();
+
+
+        })
+
+
+
+        function isValidEmailAddress(emailAddress) {
+            var pattern = new RegExp(/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i);
+            return pattern.test(emailAddress);
+        }
+
+
+
+        function checkPasswordMatch() {
+
+            var password = $("#account_password").val();
+            var confirmPassword = $("#account_password_repeat").val();
+
+            if(password =="" || confirmPassword==""){
+
+                $("#divCheckPasswordMatch").html("Passwords required!");
+                $('#divCheckPasswordMatch').val('');
+
+
+            }
+            else if (password != confirmPassword){
+                $("#divCheckPasswordMatch").html("Passwords do not match!");
+                $('#divCheckPasswordMatch').val('');
+
+            }
+            else {
+                $("#divCheckPasswordMatch").html("Passwords match.");
+
+                $('#divCheckPasswordMatch').val('Passwords match.');
+            }
+        }
+
+
+
+
+        // checks whether relevant option fields are empty
+        function check_Login_options_if_empty() {
+            var stat = true;
+
+            $("#login_fields").find(':input').each(function () {
+                if ($(this).val() == "" ) {
+                    stat = false;
+                }
+            });
+           return stat;
+        }
+
+
+
+
+        $('#login_start').click(function() {
+
+            var stat = check_Login_options_if_empty();
+
+
+            var loginError = document.getElementById('loginError');
+
+
+            if (!stat) {
+
+                $("#loginError").html("Please provide input for all relevant options.");
+
+                loginError.style.display ="";
+            }
+
+            else{
+
+
+                loginError.style.display ="";
+
+                $("#loginError").html("Logging... ");
+
+                user_account_login();
+
+            }
+
+            return false;
+        });
+
+
+
+        function user_account_login() { //user login in  submit function
+
+
+            spinner = new Spinner(opts).spin(target_login);
+            target_login.appendChild(spinner.el);
+
+            $.ajax({
+                type:'POST',
+                url:'/admin/sign_in',
+                data:{
+                    user_account_login: $('#user_login_name').val(),
+                    user_account_password: $('#user_login_password').val()
+                },
+                success:function (data) {
+
+                    if (data == 'loginOK') {
+
+                        spinner.stop();
+
+                        window.location = "/admin/myProject"
+
+                    }
+                    else {
+
+                        spinner.stop();
+
+                        var loginError = document.getElementById('loginError');
+
+                        loginError.style.display ="";
+
+                        $("#loginError").html(data);
+
+                    }
+                }
+            });
+
+
+        }
+
+
+
+
+    });
+
+</script>
+
+
+<style type="text/css">
+
+    input.groovybutton
+    {
+        font-size:11px;
+        font-family:Verdana,sans-serif;
+        font-weight:bold;
+        color:#888888;
+        width:100px;
+        background-color:#EEEEEE;
+        border-style:solid;
+        border-color:#BBBBBB;
+        border-width:1px;
+    }
+
+    input.groovybutton:hover
+    {
+        background-color: #000000;color: #ffffff;
+        border-radius:10px;
+        box-shadow:#000000;
+        -moz-box-shadow:#000000;
+        -webkit-box-shadow:#000000
+    }
+
+
+    input.groovybutton_register
+    {
+        font-size:11px;
+        font-family:Verdana,sans-serif;
+        color:#000000;
+        width:100px;
+        background-color:transparent;
+        border-style:none;
+    }
+
+    input.groovybutton_register:hover
+    {
+        background-color: #000000;
+        color: #ffffff;
+        border-radius:10px;
+        box-shadow:#000000;
+        -moz-box-shadow:#000000;
+        -webkit-box-shadow:#000000
+    }
+
+
+    .spinner {
+        position: relative;
+        left: 100px;
+        bottom: 50px;
+        margin-left: -32px; /* -1 * image width / 2 */
+        margin-top: -32px;  /* -1 * image height / 2 */
+        z-index: 99999999;
+    }
+
+
+
+</style>
+
+

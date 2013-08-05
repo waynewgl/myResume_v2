@@ -1,0 +1,136 @@
+
+<%= stylesheet_link_tag    "resume_page", :media => "all" %>
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        $(".btn-slide").click(function(){
+            $("#panel").slideToggle("slow");
+            $(this).toggleClass("active"); return false;
+        });
+
+
+    });
+</script>
+
+
+
+
+<div id="panel">
+
+
+  <div class="nav_menu"  style="    border-bottom: none;  ">
+    <%= render :partial => 'partials/resume/resume_detail_menu' %>
+
+  </div>
+
+</div>
+
+<p class="slide"><a href="#" class="btn-slide">MENU</a></p>
+
+
+<% if !@user_avatar_ori.avatar_file_name.nil?  %>
+
+    <div id="gallery_wrapper" style="position: relative;left: 880px;top: 60px;">
+
+      <%= link_to image_tag(@user_avatar_ori.avatar.url(:small)),"/" + t('admin.avatar-upload-dir') + "#{@user_avatar_ori.id}/content_" + @user_avatar_ori.avatar_file_name, :title => @user_avatar_ori.avatar_file_name , :class => "myFancybox2" %>
+
+
+    </div>
+
+<% end %>
+<div id="page-wrap">
+
+
+  <div id="contact-info" class="vcard">
+
+    <!-- Microformats! -->
+
+    <h1 class="fn"><%= raw @user_avatar_ori.name %></h1>
+
+    <p>
+      Cell: <span class="tel"><%= raw @user_avatar_ori.phone %></span><br />
+      Email: <a class="email" href="mailto:<%= raw @user_avatar_ori.email %>"><%= raw @user_avatar_ori.email %></a>
+    </p>
+  </div>
+
+  <div id="objective">
+    <p>
+      <%= raw @user_avatar_ori.intro %>
+    </p>
+  </div>
+
+  <div class="clear"></div>
+
+  <dl>
+    <dd class="clear"></dd>
+
+    <dt>Education</dt>
+    <dd>
+      <%= raw @user_avatar_ori.qalification %>
+    </dd>
+
+    <dd class="clear"></dd>
+
+    <dt>Skills</dt>
+    <dd>
+      <h2>Technical skills</h2>
+      <p>
+
+        <%for other_skill in @user_avatar_ori.other_skills.to_s.split("@") %>
+
+          <div class="talent">
+            <%= raw other_skill %>
+          </div>
+      <%end%>
+
+      </p>
+
+      <h2>Computer skills</h2>
+      <p>
+
+        <%= raw @selected_force_style1 %>
+
+      </p>
+    </dd>
+
+    <dd class="clear"></dd>
+
+    <dt>Experience</dt>
+    <dd>
+
+      <%= raw @user_avatar_ori.experience %>
+
+    </dd>
+
+    <dd class="clear"></dd>
+
+    <dt>Hobbies</dt>
+    <dd><%= raw @user_avatar_ori.hobby %></dd>
+
+    <dd class="clear"></dd>
+
+    <dt>References</dt>
+    <dd>
+      <%= raw @user_avatar_ori.referees %>
+    </dd>
+
+    <dd class="clear"></dd>
+
+
+    <dt>Projects</dt>
+    <dd>
+      <%= link_to "Click to see all projects I have done" , {:controller=>:site, :action => :allProjects , :user_project_id=> @user_avatar_ori.id }, :style =>"color: #000000;" %>
+
+    </dd>
+
+
+  </dl>
+
+  <div class="clear"></div>
+
+</div>
+
+
+

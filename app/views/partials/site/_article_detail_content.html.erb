@@ -1,0 +1,389 @@
+
+
+<div class="my_index_blocks_projects_site">
+
+  <div class="article_content_files_title"  style="word-wrap: break-word; ">
+
+
+        <div style="border-bottom: 1px solid #aaa; ">
+
+            <%  if  !@article_detail_info.nil? %>
+
+                <h5 style="font-family:'Droid Sans',Tahoma,Arial,sans-serif;font-size:20px;"> <%= raw @article_detail_info.title%></h5>
+            <%end%>
+
+          </div>
+            <%  if  !@article_detail_info.tag.nil? %>
+                <h6 style="width: 250px; word-wrap: break-word; position: relative;left: 310px; font-family:'Droid Sans',Tahoma,Arial,sans-serif;font-size:12px;">Tags: <%= truncate @article_detail_info.tag, :length=>150 %></h6>
+            <%end%>
+
+
+        <div style="position: relative;top: -20px;  padding: 10px;font-family:'Droid Sans',Tahoma,Arial,sans-serif;font-size:13px;">
+
+            <%=  @article_detail_info.created_at.to_s.split(" ")[0] %>
+
+            <%if !@article_author.nil?%>
+
+                By <%=  @article_author.login%>
+
+            <%end%>
+            <%if  !@article_author.nil?&&!@article_author_avatar.nil? && @article_author_avatar!="/avatars/thumb_small/missing.png"   %>
+                <div style="position: relative;left: 180px;top: -20px;">
+
+                  <%= link_to image_tag(@article_author_avatar),"/" + t('admin.avatar-upload-dir') + "#{@article_author.id}/content_" + @article_author.avatar_file_name, :title => @article_author.avatar_file_name , :class => "myFancybox_file" %>
+                </div>
+
+            <%end%>
+
+          </div>
+     </div>
+  <br/>
+
+
+  <div class="article_content_files"  style="word-wrap: break-word; ">
+
+    <%  if  !@article_detail_info.content.nil? %>
+
+        <p><%= raw @article_detail_info.content%></p>
+
+    <%end%>
+
+  </div>
+
+  <div class="article_content_detail"  style="word-wrap: break-word; ">
+
+      <% images = @article_detail_info.attachments.where("attfile_content_type like ?","image%") %>
+
+      <!--if more then one image then show thumb images after text -->
+      <% if (!images.nil?) %>
+
+
+          <div id="gallery_wrapper" style="margin-top: 20px;">
+            <p>Attached files: </p></br>
+
+            <div id="gallery" >
+
+              <% for img in images %>
+
+                  <div  style="position: relative;left: 20px;
+                          float:left;
+                          margin-right:3.80%;
+                          margin-bottom:20px;;">
+                    <%#= link_to image_tag("/attachments/#{img.id}/#{true}",:alt => img.data_file_name), "/" + t('admin.att-upload-dir') + "#{img.id}/" + img.data_file_name , :title => img.data_file_name , :class => "example2" %>
+                    <%= link_to image_tag(img.attfile.url(:thumb),:alt => img.attfile_file_name), "/" + t('admin.att-upload-dir') + "#{img.id}/content_" + img.attfile_file_name , :title => img.title.blank? ? img.attfile_file_name : img.title, :class => "myFancybox2" %>
+
+                  </div>
+
+              <% end  %>
+
+            </div>
+
+          </div>
+      <% end  %>
+
+
+      <% files = @article_detail_info.attachments.where("attfile_content_type not like ?","image%") %>
+
+      <% if (!files.nil?) %>
+          <br/>
+          <% for f in files %>
+              <% title = f.title.blank? ? f.attfile_file_name : f.title %>
+              <%#= image_tag "/attachments/#{img.id}/false", :alt => img.data_file_name, :width => (img.width.blank?) ? "100%" : "#{[img.width,450].min}px",:class => 'img_radius' %>
+              <%= link_to content_tag(:span) + image_tag("images/pdf_icon_tiny.jpg", :alt => "Download PDF " + title , :width => "20px", :style => "float:left;" ) + title , f.attfile.url  %> <br /><br />
+          <% end  %>
+      <% end  %>
+
+
+
+    <div style="position: relative;left: 700px; top: 20px; width: 400px;">
+
+      <input type="button" id="like" class="comments" value=" (<%= @article_detail_info.likes.size %>)I like it :)"style="width: 200px;" /><br/> <br/>
+      <input type="button" id="dislike" class="comments" value="(<%= @article_detail_info.dislikes.size %>) I don't like it :( " style="width: 200px;"/>
+
+    </div>
+
+
+
+    <div style="position: relative;left: 20px; width: 500px;">
+
+      <input type="button" id="comment_button" class="comments_button_style" value="Click to see all comments(<%= @article_detail_info.comments.count %>) +" style="font-size: 14px; width:500px; height: 50px;"/>
+      <br/>  <br/>
+
+      <div id="comment_block" style="display: none;">
+
+         <div class="comment_list_block" id="comment_list_view">
+
+           <%if !@comments.nil?%>
+
+
+               <% for comment in @comments %>
+
+
+                    <div class="user_comment">
+
+                      <%=raw  comment.comment  %>
+
+                                                   <br/><br/>
+                      <div style="position: relative;left: 330px;">
+
+                            <% user = User.find_by_id(comment.user_id) %>
+
+
+                            <% if !user.nil? %>
+
+                            <%if  user.avatar.url(:thumb_small)!="/avatars/thumb_small/missing.png"  && !user.avatar.url(:thumb_small).nil? %>
+
+                                <%= link_to image_tag(user.avatar.url(:thumb_small)),"/" + t('admin.avatar-upload-dir') + "#{user.id}/content_" + user.avatar_file_name, :title =>user.avatar_file_name , :class => "myFancybox_file" %>
+
+                            <%end%>   <br/>
+
+                                Post By <%=raw  user.login  %>
+
+
+                            <br/>  <%=raw  comment.created_at.to_s.split(" ")[0]  %>
+
+
+
+                            <% end %>
+
+                      </div>
+
+
+                    </div>
+
+               <%end%>
+
+               </div>
+
+
+               <div style="position: relative;left: 120px; top: 10px;">
+
+                 <%= will_paginate @comments ,:class => 'digg_pagination'%>
+
+               </div>
+
+             <%else%>
+
+
+
+                <p>no comments....</p>
+
+            <%end%>
+
+
+          <div>
+           <br/>  <br/>
+           <textarea class= "redactor" id="redactor_content" name="comment_info"  rows="10" cols="10 " >
+           </textarea>
+
+           <input type="button" id="post_comment" class="comments_button_style" value="Post your comment" style="position: relative;left: 160px; padding: 20px; "/>
+
+         </div>
+
+      </div>
+
+      <div id="comment_status" style="width: 400px; height: 20px; position: relative;top: 10px; left: 70px; display:none;border: 1px solid gray;">     <br/></div>
+
+    </div>
+
+
+  </div>
+
+</div>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+
+
+        <% if params[:commentShow]=="true" %>
+
+
+             if ($("#comment_block").is(":hidden")) {
+                    $("#comment_block").show("slow");
+             }
+
+            var errorDiv = $('#comment_list_view:visible').first();
+            var scrollPos = errorDiv.offset().top;
+            $(window).scrollTop(scrollPos);
+
+        <%end%>
+
+        $('#comment_button').click(function(e) {
+
+            if ($("#comment_block").is(":hidden")) {
+                $("#comment_block").show("slow");
+            } else {
+                $("#comment_block").slideUp();
+
+                var comment_status = document.getElementById('comment_status');
+
+                $("#comment_status").html("");
+
+                comment_status.style.display ="none";
+
+            }
+
+
+        });
+
+        $('#post_comment').click(function(e) {
+
+
+            var  content_post = $("#redactor_content").val();
+
+            if(content_post.trim().length==0){
+
+                var comment_status = document.getElementById('comment_status');
+
+                $("#comment_status").html("please write something to post...  :)");
+
+                comment_status.style.display ="";
+
+            }
+
+            else {
+
+
+                $.ajax({
+                    type:'POST',
+                    url:'/site/article_comment',
+                    data:{
+                        article_id:<%= @article_detail_info.id %>,
+                        content:$("#redactor_content").getCode()
+                    },
+                    success:function (data) {
+
+                        if (data=="comment post ok"){
+
+                            var comment_status = document.getElementById('comment_status');
+
+                            $("#comment_status").html(data);
+
+                            comment_status.style.display ="";
+
+                            window.location="article_detail?article_info="+ <%= @article_detail_info.id %> +"&&commentShow=true"
+
+                        }
+                        else{
+
+                            var comment_status = document.getElementById('comment_status');
+
+                            $("#comment_status").html("comment can't be posted...plese login first");
+
+                            comment_status.style.display ="";
+
+                        }
+
+
+                    }
+                });
+
+
+            }
+
+
+        });
+
+        $('#like').click(function(e) {
+
+
+            <%if session[:user_login_id].nil? %>
+
+                alert("Please login or register to vote this article");
+
+
+            <%else%>
+
+            $.ajax({
+                type:'POST',
+                url:'/site/vote_article',
+                data:{
+                    article_id:<%= @article_detail_info.id %>,
+                    use_id:<%= session[:user_login_id]%>,
+                    vote_choice:"like",
+                    article_author_id:<%= @article_author.id%>
+                },
+                success:function (data) {
+
+
+                    if (data =='vote ok') {
+
+
+                        alert("Thank you for your voting");
+
+                        window.location="article_detail?article_info="+ <%= @article_detail_info.id %>  +"&&commentShow=true"
+
+                    }
+                    else {
+
+
+                        alert(data);
+
+
+                    }
+                }
+            });
+
+
+            <%end%>
+
+
+        });
+
+
+
+
+        $('#dislike').click(function(e) {
+
+
+            <%if session[:user_login_id].nil? %>
+
+            alert("Please login or register to vote this article");
+
+
+            <%else%>
+
+            $.ajax({
+                type:'POST',
+                url:'/site/vote_article',
+                data:{
+                    article_id:<%= @article_detail_info.id %>,
+                    use_id:<%= session[:user_login_id]%>,
+                    vote_choice:"dislike",
+                    article_author_id:<%= @article_author.id%>
+
+                },
+                success:function (data) {
+
+
+                    if (data =='vote ok') {
+
+
+                        alert("Thank you for your voting");
+
+                        window.location="article_detail?article_info="+ <%= @article_detail_info.id %>  +"&&commentShow=true"
+
+                    }
+                    else {
+
+
+                        alert(data);
+
+
+                    }
+                }
+            });
+
+
+            <%end%>
+
+
+        });
+
+
+
+    });
+</script>

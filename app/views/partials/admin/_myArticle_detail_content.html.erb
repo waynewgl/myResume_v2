@@ -1,0 +1,712 @@
+
+
+
+
+<div class="my_index_blocks_projects">
+
+
+
+        <div style="position: relative;top: -200px;">
+              <div class="art_delete_div_<%= @article_detail_info.id%>">
+
+                <input type="button" id="art_delete_<%=  @article_detail_info.id%>" value="X" class="comments" style="width:20px; position: relative;left: 590px; top: 10px;">
+
+              </div>
+
+
+
+              <div class="article_content_files_title"  style="word-wrap: break-word; ">
+
+
+                    <div style="border-bottom: 1px solid #aaa; ">
+
+                            <%  if  !@article_detail_info.nil? %>
+
+                                <div class="article_title_<%=  @article_author.id%>"  style=" width: 800px; height:20px; word-wrap: break-word;font-family:'Droid Sans',Tahoma,Arial,sans-serif;font-size:20px;"> <%= raw truncate @article_detail_info.title.to_s, length: 50%></div>
+                            <%end%>
+
+
+                          </div>
+
+                    <div style="padding: 10px;font-family:'Droid Sans',Tahoma,Arial,sans-serif;font-size:13px;">
+
+                            <%=  @article_detail_info.created_at.to_s.split(" ")[0] %>
+
+                            <%if !@article_author.nil?%>
+
+                                By <%=  @article_author.name%>
+
+
+                          <%end%>
+
+                            <%if  !@article_author.nil?&&!@article_author_avatar.nil? && @article_author_avatar!="/avatars/thumb_small/missing.png"   %>
+                                <div style="position: relative;left: 180px;top: -20px;">
+
+                                  <%= link_to image_tag(@article_author_avatar),"/" + t('admin.avatar-upload-dir') + "#{@article_author.id}/content_" + @article_author.avatar_file_name, :title => @article_author.avatar_file_name , :class => "myFancybox_file" %>
+
+                                  <p style="width: 150px; word-wrap: break-word; position: relative;left: 200px; top: -20px;" >Tag: <%= @article_detail_info.tag%></p>
+
+                                </div>
+
+                            <%end%>
+
+                    </div>
+            </div>
+  <br/>
+
+
+              <div class="article_content_files"  style="word-wrap: break-word; ">
+
+
+                    <%  if  !params[:edit].nil? %>
+
+                        <div id="article_content_<%=@article_detail_info.id%>" class="redactor"><%= raw @article_detail_info.content%></div>
+                        <input type="button" id="article_content_edit_button_<%=@article_detail_info.id%>_update" value="Update" class="comments" style="position: relative;bottom: -30px;left: 160px;">
+
+                        <input type="button" id="article_content_edit_button_<%=@article_detail_info.id%>_cancel" value="Cancel" class="comments" style="position: relative;bottom: -30px;left: 160px;">
+
+                    <%else%>
+
+                        <p><%= raw @article_detail_info.content%></p>
+
+                        <input type="button" id="article_content_edit_button_<%=@article_detail_info.id%>" value="Edit" class="comments" style="position: relative;bottom: -30px;left: 200px;">
+
+                    <%end%>
+
+                <div style="position: relative;left: 300px;">
+
+                  <div id="spinner_article_edit" class="spinner" style="position: relative;top: 350px;" >
+
+                  </div>
+                </div> </br>
+
+              </div>
+
+              <div class="article_content_detail"  style="word-wrap: break-word;" id="article_attached">
+
+                  <% images = @article_detail_info.attachments.where("attfile_content_type like ?","image%") %>
+
+                  <!--if more then one image then show thumb images after text -->
+                  <% if (!images.nil?) %>
+
+
+                      <div id="gallery_wrapper" style="margin-top: 20px;">
+                        <p>Attached files: </p></br>
+
+                        <div id="gallery" >
+
+                          <% for img in images %>
+
+                              <div  style="position: relative;left: 20px;
+                                      float:left;
+                                      margin-right:3.80%;
+                                      margin-bottom:20px;;">
+                                <%#= link_to image_tag("/attachments/#{img.id}/#{true}",:alt => img.data_file_name), "/" + t('admin.att-upload-dir') + "#{img.id}/" + img.data_file_name , :title => img.data_file_name , :class => "example2" %>
+                                <%= link_to image_tag(img.attfile.url(:thumb),:alt => img.attfile_file_name), "/" + t('admin.att-upload-dir') + "#{img.id}/content_" + img.attfile_file_name , :title => img.title.blank? ? img.attfile_file_name : img.title, :class => "myFancybox2" %>
+                                <!--<%= link_to image_tag("close_pop.png", :width => "20px"), "/admin/detach_attachment/#{@article_detail_info.id}/#{img.id}", :remote => true, :title => "Delete Image", :class => "delete_att" , :id => "att_delete_#{img.id}"%>-->
+
+
+                                <input type="button" id="att_delete_<%=img.id%>" value="X" class="comments" style="width:20px ;">
+
+                              </div>
+
+                          <% end  %>
+
+                        </div>
+
+                      </div>
+                  <% end  %>
+
+
+                  <% files = @article_detail_info.attachments.where("attfile_content_type not like ?","image%") %>
+
+                  <% if (!files.nil?) %>
+                      <br/>
+                      <% for f in files %>
+                          <% title = f.title.blank? ? f.attfile_file_name : f.title %>
+                          <%#= image_tag "/attachments/#{img.id}/false", :alt => img.data_file_name, :width => (img.width.blank?) ? "100%" : "#{[img.width,450].min}px",:class => 'img_radius' %>
+                          <%= link_to content_tag(:span) + image_tag("images/pdf_icon_tiny.jpg", :alt => "Download PDF " + title , :width => "20px", :style => "float:left;" ) + title , f.attfile.url  %> <br /><br />
+
+                           <input type="button" id="att_delete_<%=f.id%>" value="X" class="comments" style="width:20px ;position: relative;top: -50px; left: -40px;">
+
+                      <% end  %>
+                  <% end  %>
+
+
+                    <div id="article_error" style="width: 160px; height: 20px; position: relative;bottom: 120px; left: 260px; display:none;border: 1px solid gray;">     <br/></div>
+
+                  </div>
+
+
+                </div>
+
+
+                <div >
+
+                  <button  class="project_button_style_user" style="width: 170px; position: relative;bottom: 480px;left: 675px;" id="add_att_button">Add file or image</button>
+
+
+                  <div class="article_attachments_admin" id="attachment_upload" style=" width: 200px; height: 200px;">
+
+
+                    <%= form_for :attachment, :url => {:controller => :admin,:action => :add_attachment},:html => {:multipart => true, :remote => true , :id => "attachment_form"} do |f| %>
+
+                        <%= f.label :title , "Title:"%> <p style="width: 40px;"> <%= f.text_field :title, :placeholder => "Type title here (optional)" %> </p>
+                        <p style="position: relative;top: 10px; width: 30px; word-wrap: break-word;"><%= f.file_field :attfile%></p>
+
+
+                    <% end %>
+
+
+
+                    <div id="att_error" style="position: relative; top: 20px;  display:none;border: 1px solid gray; padding:4px 4px 4px 4px;">     <br/></div>
+
+                    <div id="image_preview" style="position: relative; top: 40px;">
+
+
+                    </div>
+
+
+
+
+                    <div class="introduction_block_my_article">
+
+
+                      <ol>
+                        <li>Introduction:<li>
+                        <li> 1. Double Click title to edit<li>
+                        <li> 2.  Click Edit to EDIT MODE<li>
+                      </ol>
+
+                    </div>
+
+                </div>
+
+
+        </div>
+
+
+        <div style="position: relative;left: 20px; width: 500px; top: -300px;">
+
+          <input type="button" id="comment_button" class="comments_button_style" value="Click to see all comments(<%= @article_detail_info.comments.count %>) +" style="font-size: 14px; width:500px; height: 50px;"/>
+          <br/>  <br/>
+
+          <div id="comment_block" style="display: none;">
+
+            <div class="comment_list_block" id="comment_list_view">
+
+              <%if !@comments.nil?%>
+
+
+                  <% for comment in @comments %>
+
+
+                      <div class="user_comment">
+
+                        <%=raw  comment.comment  %>
+
+                        <br/><br/>
+                        <div style="position: relative;left: 330px;">
+
+                          <% user = User.find_by_id(comment.user_id) %>
+
+
+                          <% if !user.nil? %>
+
+                              <%if  user.avatar.url(:thumb_small)!="/avatars/thumb_small/missing.png"  && !user.avatar.url(:thumb_small).nil? %>
+
+                                  <%= link_to image_tag(user.avatar.url(:thumb_small)),"/" + t('admin.avatar-upload-dir') + "#{user.id}/content_" + user.avatar_file_name, :title =>user.avatar_file_name , :class => "myFancybox_file" %>
+
+                              <%end%>   <br/>
+
+                              Post By <%=raw  user.login  %>
+
+
+                              <br/>  <%=raw  comment.created_at.to_s.split(" ")[0]  %>
+
+
+
+                          <% end %>
+
+                        </div>
+
+
+                      </div>
+
+                  <%end%>
+
+                  </div>
+
+
+                  <div style="position: relative;left: 120px; top: 10px;">
+
+                    <%= will_paginate @comments ,:class => 'digg_pagination'%>
+
+                  </div>
+
+              <%else%>
+
+
+
+                  <p>no comments....</p>
+
+              <%end%>
+
+
+              <div>
+                <br/>  <br/>
+                <textarea class= "redactor" id="redactor_content" name="comment_info"  rows="10" cols="10 " >
+                </textarea>
+
+                <input type="button" id="post_comment" class="comments_button_style" value="Post your comment" style="position: relative;left: 160px; padding: 20px; "/>
+
+              </div>
+
+              </div>
+
+          <div id="comment_status" style="width: 400px; height: 20px; position: relative;top: 10px; left: 70px; display:none;border: 1px solid gray;">     <br/></div>
+
+        </div>
+
+</div>
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+
+        var target = document.getElementById('spinner_article_edit');
+
+        var spinner;
+
+
+
+
+        <% if params[:commentShow]=="true" %>
+
+
+        if ($("#comment_block").is(":hidden")) {
+            $("#comment_block").show("slow");
+        }
+
+        var errorDiv = $('#comment_list_view:visible').first();
+        var scrollPos = errorDiv.offset().top;
+        $(window).scrollTop(scrollPos);
+
+        <%end%>
+
+        $('#comment_button').click(function(e) {
+
+            if ($("#comment_block").is(":hidden")) {
+                $("#comment_block").show("slow");
+            } else {
+                $("#comment_block").slideUp();
+
+                var comment_status = document.getElementById('comment_status');
+
+                $("#comment_status").html("");
+
+                comment_status.style.display ="none";
+
+            }
+
+
+        });
+
+        $('#post_comment').click(function(e) {
+
+
+            var  content_post = $("#redactor_content").val();
+
+            if(content_post.trim().length==0){
+
+                var comment_status = document.getElementById('comment_status');
+
+                $("#comment_status").html("please write something to post...  :)");
+
+                comment_status.style.display ="";
+
+            }
+
+            else {
+
+
+                $.ajax({
+                    type:'POST',
+                    url:'/site/article_comment',
+                    data:{
+                        article_id:<%= @article_detail_info.id %>,
+                        content:$("#redactor_content").getCode()
+                    },
+                    success:function (data) {
+
+                        if (data=="comment post ok"){
+
+                            var comment_status = document.getElementById('comment_status');
+
+                            $("#comment_status").html(data);
+
+                            comment_status.style.display ="";
+
+                            window.location="myArticle_detail?article_info="+ <%= @article_detail_info.id %> +"&&commentShow=true"
+
+                        }
+                        else{
+
+                            var comment_status = document.getElementById('comment_status');
+
+                            $("#comment_status").html("comment can't be posted...plese login first");
+
+                            comment_status.style.display ="";
+
+                        }
+
+
+                    }
+                });
+
+
+            }
+
+
+        });
+
+
+
+
+        $('#add_att_button').click(function(event) {
+
+            // check if file-field empty
+            var stat = true;
+
+            if ($("#attachment_attfile").val() == "") {
+                stat = false;
+            }
+            var att_error = document.getElementById('att_error');
+            if (!stat) {
+                $("#att_error").html("Please select file or image.");
+                att_error.style.display ="";
+            }
+            else{
+
+                spinner = new Spinner(opts).spin(target);
+                target.appendChild(spinner.el);
+
+                att_error.style.display ="none";
+
+                $('#attachment_form').ajaxSubmit({
+                    data:{article_id: <%= @article_detail_info.id%>},
+                    success: function(data) {
+                        var response = JSON.parse(data);
+                        if (response.message == 'attachment is created') {
+
+                            spinner.stop();
+//                            var att_error = document.getElementById('att_error');
+//                            $("#att_error").html(response.message + response.article_id);
+//                            att_error.style.display ="";
+                            $("#article_id").val(response.article_id);
+                            // clear fields
+                            $('#attachment_attfile').val('');
+                            $('#attachment_title').val('');
+
+                            window.location="myArticle_detail?article_info="+<%= @article_detail_info.id%>
+
+                            var errorDiv = $('#article_attached:visible').first();
+                            var scrollPos = errorDiv.offset().top;
+                            $(window).scrollTop(scrollPos);
+                        }
+                        else{
+                            spinner.stop();
+                            var att_error = document.getElementById('att_error');
+                            $("#att_error").html(response.message);
+                            att_error.style.display ="";
+                        }
+                    }
+                });
+            }
+            return false;
+
+        });
+
+
+
+
+
+
+
+
+        var opts = {
+            lines: 13, // The number of lines to draw
+            length: 7, // The length of each line
+            width: 4, // The line thickness
+            radius: 10, // The radius of the inner circle
+            corners: 1, // Corner roundness (0..1)
+            rotate: 0, // The rotation offset
+            color: '#000', // #rgb or #rrggbb
+            speed: 1, // Rounds per second
+            trail: 60, // Afterglow percentage
+            shadow: false, // Whether to render a shadow
+            hwaccel: false, // Whether to use hardware acceleration
+            className: 'spinner', // The CSS class to assign to the spinner
+            zIndex: 2e9, // The z-index (defaults to 2000000000)
+            top: 'auto', // Top position relative to parent in px
+            left: 'auto' // Left position relative to parent in px
+        };
+
+
+        $(".art_delete_div_<%= @article_detail_info.id%>").append("<em></em>");
+
+        $(".art_delete_div_<%= @article_detail_info.id%>").hover(function() {
+            $(this).find("em").animate({opacity: "show", top: "-75"}, "slow");
+            var hoverText = $(this).attr("title");
+            $(this).find("em").text("Delete article");
+        }, function() {
+            $(this).find("em").animate({opacity: "hide", top: "-75"}, "fast");
+        });
+
+        $(function () {
+
+
+            $('#article_content_edit_button').click(function() {
+
+                spinner = new Spinner(opts).spin(target);
+                target.appendChild(spinner.el);
+
+                $.ajax({
+                    type:'POST',
+                    url:'/admin/update_article_content',
+                    data:{
+                        article_id:<%= @article_detail_info.id %>,
+                        article_content:$('#article_content_files').getCode()
+                    },
+                    success:function (data) {
+
+                        if (data == 'Article is updated') {
+
+                            // alert(data);
+                            spinner.stop();
+
+
+                            var article_error = document.getElementById('article_error');
+
+                            $("#article_error").html(data);
+
+                            article_error.style.display ="";
+
+                        }
+                        else {
+
+                            spinner.stop();
+
+
+                            var article_error = document.getElementById('article_error');
+
+                            $("#article_error").html("article cannot be updated...");
+
+                            article_error.style.display ="";
+
+
+                        }
+                    }
+                });
+
+            });
+
+            <% for f in files %>
+
+                $('#att_delete_<%=f.id %>').click(function(){
+                    //var image_id = $('#image_id').val();
+                    //var image_title = $('#image_title').val();
+
+                    var articleId = <%= @article_detail_info.id %>
+
+                    spinner= new Spinner(opts).spin(target);
+                    target.appendChild(spinner.el);
+
+
+                    $.ajax({
+                        type:'POST',
+                        url:'/admin/detach_attachment',
+                        data:{article_id: articleId, att_id:<%=f.id %>, id_string:"att_delete"},
+                        success:function (data) {
+                            if (data == 'OK') {
+
+
+                                window.location = "myArticle_detail?article_info="+articleId;
+
+                                spinner.stop();
+
+
+                            } else {
+
+                                spinner.stop();
+                                alert(data);
+                            }
+                        }
+                    });
+                    return false;
+                });
+
+
+            <%end%>
+
+
+            <% for img in images %>
+
+
+            $('#att_delete_<%=img.id %>').click(function(){
+                //var image_id = $('#image_id').val();
+                //var image_title = $('#image_title').val();
+
+                var articleId = <%= @article_detail_info.id %>
+
+                spinner= new Spinner(opts).spin(target);
+                target.appendChild(spinner.el);
+
+
+                $.ajax({
+                    type:'POST',
+                    url:'/admin/detach_attachment',
+                    data:{article_id: articleId, att_id:<%=img.id %>, id_string:"att_delete"},
+                    success:function (data) {
+                        if (data == 'OK') {
+
+
+                            window.location = "myArticle_detail?article_info="+articleId;
+
+                            spinner.stop();
+
+
+                        } else {
+
+                            spinner.stop();
+                            alert(data);
+                        }
+                    }
+                });
+                return false;
+            });
+
+
+           <%end%>
+
+
+
+
+            $('#art_delete_<%= @article_detail_info.id %>').click(function(){
+
+
+                var articleId = <%= @article_detail_info.id %>
+
+                spinner= new Spinner(opts).spin(target);
+                target.appendChild(spinner.el);
+
+
+                $.ajax({
+                    type:'POST',
+                    url:'/admin/delete_article',
+                    data:{article_id: articleId},
+                    success:function (data) {
+                        if (data == 'OK') {
+
+                            window.location = "myProject";
+
+                            spinner.stop();
+
+
+                        } else {
+
+                            spinner.stop();
+                            alert(data);
+                        }
+                    }
+                });
+                return false;
+            });
+
+
+            $('#article_content_edit_button_<%=@article_detail_info.id%>').click(function(){
+
+                    window.location="myArticle_detail?article_info="+ <%=@article_detail_info.id%> +"&&edit=true"
+            });
+
+            $('#article_content_edit_button_<%=@article_detail_info.id%>_cancel').click(function(){
+
+                window.location="myArticle_detail?article_info="+<%=@article_detail_info.id%>
+            });
+
+
+            //start  update article content
+            $('#article_content_edit_button_<%=@article_detail_info.id%>_update').click(function(){
+
+
+
+                    var articleId = <%= @article_detail_info.id %>
+
+                    spinner= new Spinner(opts).spin(target);
+                    target.appendChild(spinner.el);
+
+
+                    $.ajax({
+                        type:'POST',
+                        url:'/admin/update_article_content',
+                        data:{article_id: articleId,
+                             article_content:$('#article_content_<%=@article_detail_info.id%>').getCode()
+                        },
+                        success:function (data) {
+                            if (data == 'Article is updated') {
+
+                                spinner.stop();
+                                window.location = "myArticle_detail?article_info="+articleId;
+
+
+
+
+                                } else {
+
+                                    spinner.stop();
+                                    alert(data);
+                                }
+                            }
+                        });
+                        return false;
+
+
+                     });
+
+                  });  //end update article content
+
+
+
+        $('.article_title_<%=  @article_author.id%>').editable('/admin/update_article_content?article_id=<%= @article_detail_info.id%>&&edit_title=true', {
+            type:'text',
+            width: 150,
+            height: 24,
+            cancel:'<button type="submit" class="comments">Cancel</button>',
+            submit:'<button type="submit" class="comments">OK</button>',
+            indicator:'Saving...',
+            tooltip:'Double click here to update title .',
+            event:'dblclick',
+            placeholder:'Double click here to update this title'
+        });
+
+    });
+</script>
+
+
+<style>
+
+
+    .spinner {
+        position: relative;
+        left: 100px;
+        top: 300px;
+        margin-left: -32px; /* -1 * image width / 2 */
+        margin-top: -32px;  /* -1 * image height / 2 */
+        z-index: 99999999;
+    }
+
+</style>
+

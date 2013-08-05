@@ -1,0 +1,173 @@
+
+
+<script>
+
+
+    $(document).ready(function () {
+
+        var collapsible = $( "#accordion" ).accordion( "option", "collapsible" );
+
+        $( "#accordion" ).accordion("option", "collapsible", true);
+
+
+
+
+    });
+
+
+
+
+</script>
+
+
+  <div style="position: relative; left: 100px; width: 880px;">
+
+        <div id="accordion" class="articleContentBlock" style="width:900px; background: transparent; overflow: scroll;" >
+          <%for article in @user_articles %>
+
+            <h3><p style="position: relative;left: 300px;">Title: <%= article.title %> </p>
+              <p style="position: relative;left: 300px;">Created at <%= article.created_at.to_s.split(" ")[0] %> </p>
+              <p style="position: relative;left: 300px;">Tag:<%= article.tag%> </p>
+            </h3>
+          <div style="background: transparent;">
+            <p><%= raw article.content%></p>
+
+          </div>
+          <%end%>
+
+        </div>
+
+
+
+
+  </div>
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+
+        var opts = {
+            lines: 13, // The number of lines to draw
+            length: 7, // The length of each line
+            width: 4, // The line thickness
+            radius: 10, // The radius of the inner circle
+            corners: 1, // Corner roundness (0..1)
+            rotate: 0, // The rotation offset
+            color: '#000', // #rgb or #rrggbb
+            speed: 1, // Rounds per second
+            trail: 60, // Afterglow percentage
+            shadow: false, // Whether to render a shadow
+            hwaccel: false, // Whether to use hardware acceleration
+            className: 'spinner', // The CSS class to assign to the spinner
+            zIndex: 2e9, // The z-index (defaults to 2000000000)
+            top: 'auto', // Top position relative to parent in px
+            left: 'auto' // Left position relative to parent in px
+        };
+
+
+        $(function () {
+
+            <!--<%for article in @user_articles %>-->
+
+
+    //            $('.article_content_text_<%= article.id %>').each(function() {
+    //                $(this).editable('/admin/update_article_content?article_id=<%= article.id %>', {
+    //                    submit:'<button type="submit" class="checkbookButton">OK</button>',
+    //                    cancel:'  Cancel  ',
+    //                    width: 650,
+    //                    height:404,
+    //                    cssclass: "redactor",
+    //                    type:"textarea",
+    //                    indicator:'Saving...',
+    //                    event:'dblclick',
+    //                    loadurl  : '/admin/returnArticleContent?article_id=<%= article.id %>',
+    //                    data: function(value, settings) {
+    //                        var retval = $('#article_content_html_<%= article.id %>').getCode();
+    //                        return retval;
+    //                    }
+    //
+    //                });
+    //
+    //            });
+    //
+           <!--<%end%>-->
+           <%for article in @user_articles %>
+
+            var target_<%= article.id %> = document.getElementById('spinner_article_edit_<%= article.id %>');
+
+            var spinner_<%= article.id %>;
+
+            $('#article_content_edit_button_<%= article.id %>').click(function() {
+
+                spinner_<%= article.id %> = new Spinner(opts).spin(target_<%= article.id %>);
+                target_<%= article.id %>.appendChild(spinner_<%= article.id %>.el);
+
+                $.ajax({
+                    type:'POST',
+                    url:'/admin/update_article_content',
+                    data:{
+                        article_id:<%= article.id %>,
+                        article_content:$('#article_content_html_<%= article.id %>').getCode()
+                    },
+                    success:function (data) {
+
+                        if (data == 'Article is updated') {
+
+                           // alert(data);
+                            spinner_<%= article.id %>.stop();
+
+
+                            var article_error_<%= article.id %> = document.getElementById('article_error_<%= article.id %>');
+
+                            $("#article_error_<%= article.id %>").html(data);
+
+                            article_error_<%= article.id %>.style.display ="";
+
+                        }
+                        else {
+
+                            spinner_<%= article.id %>.stop();
+
+
+                            var article_error = document.getElementById('article_error');
+
+                            $("#article_error").html("article cannot be updated...");
+
+                            article_error.style.display ="";
+
+
+                        }
+                    }
+                });
+
+            });
+
+
+
+
+            <%end%>
+
+
+
+
+        });
+    });
+</script>
+
+
+<style>
+
+
+    .spinner {
+        position: relative;
+        left: 100px;
+        top: 300px;
+        margin-left: -32px; /* -1 * image width / 2 */
+        margin-top: -32px;  /* -1 * image height / 2 */
+        z-index: 99999999;
+    }
+
+</style>

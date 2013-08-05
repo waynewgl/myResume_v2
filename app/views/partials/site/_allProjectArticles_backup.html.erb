@@ -1,0 +1,162 @@
+
+
+
+
+<% for user_article in @user_articles %>
+
+
+              <%  if  !user_article[:article][:content].nil? %>
+
+                  <div class="index_blocks_projects">
+
+
+                         <div style="border-bottom: 1px solid #aaa; ">
+
+                           <%  if  !user_article[:article][:title].nil? %>
+                               <h5 style="font-family:'Droid Sans',Tahoma,Arial,sans-serif;font-size:20px;"> <%= raw user_article[:article][:title]%></h5>
+                           <%end%>
+
+                         </div>
+
+                        <div style="padding: 10px;font-family:'Droid Sans',Tahoma,Arial,sans-serif;font-size:13px;">
+
+                          <%=  user_article[:article][:created_at].to_s.split(" ")[0] %>
+
+                          <%if !user_article[:user].nil?%>
+
+                              By <%=  user_article[:user][:name]%>
+
+                        <%end%>
+                          <%if  !user_article[:user].nil? && user_article[:userAvatar]!="/avatars/thumb_small/missing.png"   %>
+                              <div style="position: relative;left: 180px;top: -20px;">
+
+                                <%= link_to image_tag(user_article[:userAvatar]),"/" + t('admin.avatar-upload-dir') + "#{user_article[:user][:id]}/content_" + user_article[:user][:avatar_file_name], :title => user_article[:user][:avatar_file_name] , :class => "myFancybox_file" %>
+                              </div>
+
+                          <%end%>
+
+
+                        </div>
+
+                    <br/>
+
+
+                    <div class="artcile_content"  style="word-wrap: break-word;">
+
+                      <%  if  !user_article[:article][:content].nil? %>
+
+                          <p><%= raw truncate user_article[:article][:content].strip, length: 260%></p>
+
+                      <%end%>
+
+                    </div>
+
+                    <%if  !user_article[:image_details].nil? && user_article[:image]!="/attfile/small/missing.png"
+
+                        logger.info "now we have article image #{user_article[:image]}"
+                    %>
+
+                        <div style="position: absolute; top:100px ;left: 20px; width: 300px; ">
+
+                          <%= link_to image_tag(user_article[:image]),"/" + t('admin.att-upload-dir') + "#{user_article[:image_details][:id]}/content_" + user_article[:image_details][:attfile_file_name], :title => user_article[:image_details][:attfile_file_name] , :class => "myFancybox_file" %>
+
+                        </div>
+
+                    <%end%>
+
+
+
+
+                        <div style="position: relative;left:20px; top: -115px;width:100px;height:20px" class="comments">
+
+
+                          <%= link_to "Comments", url_for(:controller => :site, :action => :article_detail, :article_info=>user_article[:article][:id]),:style=>"padding:15px;"%>
+
+                        </div>
+
+                        <div style="position: relative;left:390px; top: 15px;width:100px;height:20px"class="comments">
+
+                            <%= link_to "Read more", url_for(:controller => :site, :action => :article_detail,:article_info=>user_article[:article][:id]),:style=>"padding:15px;"%>
+                        </div>
+
+                  </div>
+
+                    <br/><br/><br/>
+             <%end%>
+
+
+      <%end%>
+
+
+<style type="text/css">
+
+    .comments
+    {
+        background-color:#000000;
+        font-size:11px;
+        font-family:Verdana,sans-serif;
+        font-weight:bold;
+        color: #ffffff;
+        width:100px;
+        border-radius:10px;
+        box-shadow:#000000;
+        -moz-box-shadow:#000000;
+        -webkit-box-shadow:#000000
+    }
+
+    .comments a
+    {
+
+        color: #ffffff;
+
+    }
+    .comments:hover
+    {
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAIAAADZSiLoAAAAHElEQVQIHWP48+fP9+/f////zwCkgBwQC4ghAACODRqkCkEF0QAAAABJRU5ErkJggg==); /* Can replace this with any pattern or color */
+        border-style:solid;
+        border-color:#BBBBBB;
+        border-width:1px;
+        color: #000000;
+
+    }
+    .comments a:hover
+    {
+        color:#000000;
+
+    }
+
+    .spinner {
+        position: relative;
+        left: 100px;
+        bottom: 50px;
+        margin-left: -32px; /* -1 * image width / 2 */
+        margin-top: -32px;  /* -1 * image height / 2 */
+        z-index: 99999999;
+    }
+
+
+     .artcile_content{
+
+
+         position: relative;
+         left: 300px;
+         width: 300px;
+         height: 300px;
+         font-family:'Droid Sans',Tahoma,Arial,sans-serif;font-size:15px;
+
+
+     }
+
+
+</style>
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+
+
+
+
+    });
+</script>

@@ -1,0 +1,506 @@
+<style type="text/css" xmlns="http://www.w3.org/1999/html">
+
+
+
+
+    .groovybutton_side
+    {
+        position: relative;
+        bottom: -90px;
+        left: 100px;
+        font-size:11px;
+        font-family:Verdana,sans-serif;
+        font-weight:bold;
+        color:#888888;
+        width:200px;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAIAAADZSiLoAAAAHElEQVQIHWP48+fP9+/f////zwCkgBwQC4ghAACODRqkCkEF0QAAAABJRU5ErkJggg==); /* Can replace this with any pattern or color */
+        border-radius: 1px;
+        border:1px solid #2c2b2b;
+        -webkit-box-shadow:0 0 32px #e6e8e8;
+        -moz-box-shadow:0 0 30px #e6e8e8;
+        box-shadow:0 0 30px #e6e8e8;
+        outline: 1px;
+    }
+    .groovybutton_side:hover
+    {
+
+        background:#d3d3d3;
+
+    }
+
+
+    .groovy_att_button
+    {
+        font-size:11px;
+        font-family:Verdana,sans-serif;
+        font-weight:bold;
+        color:#888888;
+        width:100px;
+        position: absolute;
+        top: 0px;
+        left: 80px;
+        right: 10px;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAIAAADZSiLoAAAAHElEQVQIHWP48+fP9+/f////zwCkgBwQC4ghAACODRqkCkEF0QAAAABJRU5ErkJggg==); /* Can replace this with any pattern or color */
+        border-radius: 1px;
+        border:1px solid #2c2b2b;
+        -webkit-box-shadow:0 0 32px #e6e8e8;
+        -moz-box-shadow:0 0 30px #e6e8e8;
+        box-shadow:0 0 30px #e6e8e8;
+        outline: 1px;
+    }
+
+    .groovy_att_button:hover
+    {
+        background:#d3d3d3;
+    }
+
+    .spinner {
+        position: relative;
+        left: 300px;
+        bottom: 20px;
+        margin-left: -32px; /* -1 * image width / 2 */
+        margin-top: -32px;  /* -1 * image height / 2 */
+        z-index: 99999999;
+    }
+
+</style>
+
+<script type="text/javascript" xmlns="http://www.w3.org/1999/html">
+
+
+    $(document).ready(function () {
+
+
+
+        <%  if !@user_avatar_ori.selected_style.nil? %>
+
+
+
+             display_template (<%= @user_avatar_ori.selected_style %>);
+
+
+        <%end%>
+
+
+        $(".chzn-select").chosen();
+        $(".chzn-select-deselect").chosen({allow_single_deselect:true});
+
+
+
+        <%  if !@selected_force.nil?
+
+        @selected_force.each do |c|  %>
+
+            $("#edit_profile_others_skills option").each(function () {
+                if ($(this).val() ==  '<%= c %>'){
+                    $(this).attr('selected', 'selected');
+                }
+            });
+
+
+        <%  end
+
+        end%>
+
+
+
+//        $("#edit_profile_others_selected_style").each(function () {
+//            if ($(this).val() == '2')
+//                $(this).attr('selected', 'selected');
+//        });
+
+
+        <% if params[:edit_finished]=="true"%>
+
+            var errorDiv = $('#template_block_direction:visible').first();
+            var scrollPos = errorDiv.offset().top;
+            $(window).scrollTop(scrollPos);
+
+        <% end %>
+
+        var opts = {
+            lines: 13, // The number of lines to draw
+            length: 7, // The length of each line
+            width: 4, // The line thickness
+            radius: 10, // The radius of the inner circle
+            corners: 1, // Corner roundness (0..1)
+            rotate: 0, // The rotation offset
+            color: '#000', // #rgb or #rrggbb
+            speed: 1, // Rounds per second
+            trail: 60, // Afterglow percentage
+            shadow: false, // Whether to render a shadow
+            hwaccel: false, // Whether to use hardware acceleration
+            className: 'spinner', // The CSS class to assign to the spinner
+            zIndex: 2e9, // The z-index (defaults to 2000000000)
+            top: 'auto', // Top position relative to parent in px
+            left: 'auto' // Left position relative to parent in px
+        };
+        var target = document.getElementById('spinnerContainer');
+        var target_avatar = document.getElementById('spinnerContainer_avatar');
+
+        var spinner;
+
+
+        $('#edit_profile_others_button').click(function(event) {
+
+
+                spinner = new Spinner(opts).spin(target);
+                target.appendChild(spinner.el);
+
+                $('#edit_profile_form_others').ajaxSubmit({
+                    data:{edit_other_true: true},
+                    success: function(data) {
+                        var response = JSON.parse(data);
+
+                        if (response.message == 'user detail is updated') {
+
+                            spinner.stop();
+                            var att_error = document.getElementById('att_error');
+                            $("#att_error").html(response.message + response.user_id);
+                            att_error.style.display ="";
+
+                            window.location = "/admin/edit_profile?edit_finished=true";
+
+
+                        }
+                        else{
+                            var att_error = document.getElementById('att_error');
+                            $("#att_error").html(response.message);
+                            att_error.style.display ="";
+                        }
+                    }
+                });
+
+            return false;
+
+        });
+
+
+        $('#edit_profile_button').click(function(event) {
+
+            // check if file-field empty
+            var stat = true;
+
+            if ($("#edit_profile_avatar").val() == "") {
+                stat = false;
+            }
+            var att_error = document.getElementById('att_error');
+            if (!stat) {
+                $("#att_error").html("Please select file or image.");
+                att_error.style.display ="";
+            }
+            else{
+
+                spinner = new Spinner(opts).spin(target_avatar);
+                target_avatar.appendChild(spinner.el);
+
+                att_error.style.display ="none";
+                // check whether article already exists and has to be updated
+                var edit = true;
+
+                $('#edit_profile_form').ajaxSubmit({
+                    data:{edit_true: edit},
+                    success: function(data) {
+
+                        var response = JSON.parse(data);
+
+                        if (response.message == 'avatar is created') {
+
+                            var att_error = document.getElementById('att_error');
+                            $("#att_error").html(response.message + response.user_id);
+                            att_error.style.display ="";
+                            var loadUrl = "/admin/load_atts_for_profile?user_id="+response.user_id;
+                            $("#profile_preview").load(loadUrl);
+
+                            window.location = "/admin/edit_profile";
+
+
+                        }
+                        else{
+                            var att_error = document.getElementById('att_error');
+                            $("#att_error").html(response.message);
+                            att_error.style.display ="";
+                        }
+                    }
+                });
+            }
+            return false;
+
+        });
+
+        // checks whether relevant option fields are empty
+        function check_options_if_empty() {
+            var stat = true;
+
+            $("#edit_profile_form_others").find(':input').each(function () {
+                if ($(this).val() == "" ) {
+                    stat = false;
+                }
+            });
+
+            return stat;
+        }
+
+
+        $("#edit_profile_others_skills").change(function () {
+            var str = "";
+            $("select option:selected").each(function () {
+
+                if($(this).text()!="1" && $(this).text()!="2"){
+                    str += $(this).text() + ", ";
+                }
+            });
+            $("#skills_coll").text(str);
+        }).trigger('change');
+
+
+            $('#edit_profile_others_selected_style').on('change', function(e) {
+
+
+                display_template (this.value);
+
+
+            });
+
+
+        function display_template (index){
+
+            $("#template_block").slideUp("slow");
+
+            $("#template_block img:last-child").remove();
+
+            var current_template_url="\<img src=" +  "\"/assets/small_template_" +index +".png\" " +" /> "
+
+
+            $("#template_block").append(current_template_url);
+
+            $("#template_block").slideDown("slow");
+
+        }
+
+
+
+
+
+        $('#view_resume').click(function(event) {
+
+
+                   window.location="/resume/index?user="+ <%= @user_avatar_ori.id %>
+
+        });
+
+        $('#my_space').click(function(event) {
+
+
+
+                window.location="myProject"
+
+        });
+
+        $('#view_project').click(function(event) {
+
+            window.location="/site/allProjects "
+
+        });
+
+
+
+
+    });
+
+
+
+</script>
+
+
+<div id="content1"  style="position: relative;top: -137px;">
+
+
+
+
+  <div id="att_error" style="position: relative; top: 20px;  display:none;border: 1px solid gray; padding:4px 4px 4px 4px;">     <br/></div>
+
+
+        <div class="edit_profile_others" id="profile_other_upload">
+
+
+          <%= form_for :edit_profile_others, :url => {:controller => :admin,:action => :edit_profile_others},:html => {:multipart => true, :remote => true , :id => "edit_profile_form_others"} do |f| %>
+
+
+              <p style="padding:10px; position: relative;top: 40px;left: 150px; width: 50px; font-size: 14px; "> <%= f.label :title , "Name:"%> <%= f.text_field :name,:id=>"name", :value=>@user_avatar_ori.name  ,:style => "width:350px; background:transparent;", :placeHolder=> "You Name"%></p>
+
+              <p style="padding:10px;position: relative;top: 40px; left: 150px;width: 50px; font-size: 14px; "> <%= f.label :title , "Email:"%><%= f.text_field :email,:id=>"email",:value=>@user_avatar_ori.email ,:style => "width:350px; background:transparent;", :placeHolder=> "myemail@gmail.com"%></p>
+              <p style="padding:10px;position: relative;top: 40px; left: 150px;width: 50px; font-size: 14px; "> <%= f.label :title , "Phone:"%><%= f.text_field :phone,:id=>"phone",:value=>@user_avatar_ori.phone ,:style => "width:350px; background:transparent;", :placeHolder=> "0XX73737XX"%></p>
+
+              <p style="padding:10px;position: relative;top: 40px; left: 150px;width:390px; font-size: 14px; "> <%= f.label :title , "Developer Position:"%> <br><%= f.text_field :developer_field,:id=>"developer_field",:value=>@user_avatar_ori.developer_field, :placeHolder=> "Mobile Developer,Web developer.. etc..." ,:style => "width:350px; background:transparent;"%></p>
+
+              <p style="padding:10px;position: relative;top: 40px; left: 150px;width: 390px; font-size: 14px; "><%= f.label :title , "Proessional Profile:",:style=>"width:200px;"%><%= f.text_area :intro,:id=>"intro",:value=>@user_avatar_ori.intro,  :class=> "redactor_qual", :style => "width:350px;height:200px;"%></p>
+
+              <p style="padding:10px;position: relative;top: 40px; left: 150px;width: 390px; font-size: 14px;"> <%= f.label :title , "Programming Skills: (Click to select multiple skills)",:style=>"width:200px;"%>   <%= f.select :skills, options_for_select(@available_skills), {}, {:multiple => true, :class => "chzn-select", :tabindex=> "8", :style => "width:390px;height:200px;" } %>
+
+                <br/> <br/>
+              <div style="position: relative;left: 160px; top: 20px; border: 1px; width: 390px;
+
+                      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAIAAADZSiLoAAAAHElEQVQIHWP48+fP9+/f////zwCkgBwQC4ghAACODRqkCkEF0QAAAABJRU5ErkJggg==); /* Can replace this with any pattern or color */
+                      border-radius: 1px;
+                      border:1px solid #fafafa;
+                      -webkit-box-shadow:0 0 12px #bbb;
+                      -moz-box-shadow:0 0 10px #bbb;
+                      box-shadow:0 0 10px #bbb;
+                      outline: none;;
+              ">
+
+                <h4 style="font-size: 14px; color:gray;">You selected programming skills:</h4>
+                <div id="skills_coll">
+
+                </div>
+
+              </div>
+
+
+              <p style="padding:10px;position: relative;top: 40px; left: 150px;width: 400px; font-size: 14px; "> <%= f.label :title , "Technical skills (Note:please separate each paragraph by @)",:style=>"width:200px;"%><br>
+
+                <%= f.text_area :other_skills,:id=>"Other_skills",  :class=> "redactor_qual",:value=>@user_avatar_ori.other_skills, :placeHolder=> "Web Design Assertively exploit wireless initiatives rather than synergistic core competencies... etc..." , :style => "width:350px;height:200px;"%></p>
+
+
+
+              <div style="padding:10px;position: relative;top: 40px; left: 150px; width: 390px; font-size: 14px;"> <%= f.label :title , "Education Qualifications:"%><%= f.text_area :qalification,:id=>"qalification",:value=>@user_avatar_ori.qalification,  :class=> "redactor_qual", :style => "width:350px;height:200px;"%></div>
+
+              <div style="padding:10px;position: relative;top: 40px; left: 150px; width: 390px; font-size: 14px;"> <%= f.label :title , "Work Experiences:"%><%= f.text_area :experience,:id=>"experience",:value=>@user_avatar_ori.experience,  :class=> "redactor_qual", :style => "width:350px;height:200px;"%></div>
+
+              <div style="padding:10px;position: relative;top: 40px; left: 150px; width: 390px; font-size: 14px;"> <%= f.label :title , "Referees:"%><%= f.text_area :referees,:id=>"referees",:value=>@user_avatar_ori.referees,  :class=> "redactor_qual", :style => "width:350px;height:200px;"%></div>
+
+              <p style="padding:10px;position: relative;top: 40px; left: 150px;width: 50px; font-size: 14px; "> <%= f.label :title , "Hobbies:"%><%= f.text_field :hobby,:id=>"hobby",:value=>@user_avatar_ori.hobby ,:style => "width:350px; background:transparent;", :placeHolder=> "Your hobbies"%></p>
+
+              <p style="padding:10px;position: relative;top: 40px; left: 150px;width: 390px; font-size: 14px;"> <%= f.label :title , "Resume Template Style",:style=>"width:200px;"%><%= f.select :selected_style, options_for_select(['1','2'], :selected => @user_avatar_ori.selected_style), {}, { :class => "chzn-select", :style => "width:390px;" } %>
+
+               <!--<div id="style_imagethumb" >-->
+
+                 <!--<%= link_to image_tag("background.png"),"", :class => "myFancybox_file" %>-->
+
+               <!--</div>-->
+
+
+
+              <button  class="groovybutton_side" id="edit_profile_others_button">Update your resume</button>
+
+              <div id="template_block" class="resume_template" style="display: none; position: relative;left: 560px;">
+
+
+
+
+              </div>
+
+
+              <div id="template_block_direction" class="resume_template_choice">
+
+                <p style="color: #000000;"> You can now: </p>
+
+                <input id="view_resume" type="button" class="comments_button_style" value="View Your Resume" style=" width:150px; padding: 5px;">
+
+                <input id="my_space"  type="button" class="comments_button_style" value="Go to My Space" style="width:150px;  padding: 5px;">
+
+                <input id="view_project"  type="button" class="comments_button_style" value="View All Projects" style="width:150px;  padding: 5px;">
+
+
+
+              </div>
+
+
+              <div id="spinnerContainer" class="spinner" style="position: relative;bottom:-120px;">
+
+              </div>
+
+              <input id="edit_other_true" type="hidden" name="edit_other_true" value="true">
+
+          <% end %>
+
+
+
+          <input id="current_template_selection_value" type="hidden" name="edit_other_true" value="<%=@user_avatar_ori.selected_style%>">
+          <input name="template_selection" type="hidden"/>
+          <input name="template_changed" type="hidden"/>
+
+
+
+
+        </div>
+
+
+
+<div class="edit_profile_avatar" id="profile_upload_avatar">
+
+          <% if !@user_avatar_ori.avatar_file_name.nil?  %>
+
+              <div id="gallery_wrapper" style="position: relative;left: 50px;top: 60px;">
+
+                <h5>Avatar attached:</h5>
+
+                      <%= link_to image_tag(@user_avatar_ori.avatar.url(:small)),"/" + t('admin.avatar-upload-dir') + "#{@user_avatar_ori.id}/content_" + @user_avatar_ori.avatar_file_name, :title => @user_avatar_ori.avatar_file_name , :class => "myFancybox_file" %>
+
+
+              </div>
+
+              <% end %>
+
+
+              <%= form_for :edit_profile, :url => {:controller => :admin,:action => :edit_profile},:html => {:multipart => true, :remote => true , :id => "edit_profile_form"} do |f| %>
+
+
+                  <p style="position: absolute;bottom:10px; width: 30px; left:30px ; word-wrap: break-word;"><%= f.file_field :avatar%></p>
+
+                  <input id="edit" type="hidden" name="edit_true" value="true">
+
+              <% end %>
+
+             <button  class="groovy_att_button" id="edit_profile_button">Upload Avatar</button>
+
+            <div id="spinnerContainer_avatar" class="spinner"  style="top: 100px;">
+
+            </div>
+          </div>
+
+</div>
+
+
+
+
+<script>
+
+
+
+
+    $(document).ready(
+
+          function(){
+                var csrf_token = $('meta[name=csrf-token]').attr('content');
+                var csrf_param = $('meta[name=csrf-param]').attr('content');
+                var params;
+                if (csrf_param !== undefined && csrf_token !== undefined) {
+                    params = csrf_param + "=" + encodeURIComponent(csrf_token);
+                }
+                $('.redactor_qual').redactor(
+                        { //"imageUpload":"/redactor_rails/pictures?" + params,
+                            //"imageGetJson":"/redactor_rails/pictures",
+                            //"fileUpload":"/redactor_rails/pictures?" + params,
+                            "path":"/assets/redactor-rails",
+                            "css":"style.css",
+                            buttons: ['formatting', '|',
+                                'fontcolor', '|',
+                                'bold', 'italic', 'deleted', '|',
+                                'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
+                                'alignleft', 'aligncenter', 'alignright', 'justify', '|',
+                                'horizontalrule', '|',
+                                'table', 'link', '|'],
+                            focus: false,
+                            minHeight:200,
+                            minWidth:350,
+                            autoresize: false
+                        }
+                );
+
+
+            });
+
+
+</script>

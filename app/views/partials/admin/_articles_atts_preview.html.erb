@@ -1,0 +1,157 @@
+
+
+
+<div id="spinner_detach_image" class="spinner" style="position: relative;top: 100px;" >
+
+</div>
+
+    <% if (!@images.nil? && @images.count > 0)   %>
+
+
+                <div style="margin-right: 5px;overflow: auto;width: 100%; margin-bottom: 20px;">
+
+                    <% for img in @images %>
+
+                          <div id="gallery_wrapper">
+
+                                <h5>Images attached:</h5>
+
+                                <div id="gallery" >
+                            <!--image_path("/attachments/#{img.id}/#{false}")-->
+                            <%#= link_to image_tag("/attachments/#{img.id}/#{true}",:alt => img.attfile_file_name), "#", :title => img.attfile_file_name ,:style => "margin-right: 10px;" , :class => "preview_image" , :id => "image#{img.id}" %>
+
+                                    <div style="margin-right: 10px;float:left;width: 130px;overflow: hidden;height: 140px;text-align: center;">
+                                        <div style= "width:80%;float: left; margin-right: 5px; ">
+                                          <%= link_to image_tag(img.attfile.url(:thumb),:alt => img.attfile_file_name), "#", :title => img.title.blank? ? img.attfile_file_name : img.title, :class => "myFancybox_file" %>
+
+                                        </div>
+                                        <div style="float: right;vertical-align: top;">
+                                          <%= link_to image_tag("close_pop.png", :width => "20px"), "/admin/detach_attachment/#{@article_id}/#{img.id}", :title => "Delete Image", :class => "delete_att" , :id => "att_delete#{img.id}" %>
+
+                                        </div>
+                                      <%= title = img.title.blank? ? img.attfile_file_name : img.title  %>
+                                    </div>
+
+                                </div>
+                          </div>
+
+
+                    <% end  %>
+
+                </div>
+
+
+    <% end %>
+
+<div id="file_wrapper">
+    <% if (!@files.nil? && @files.count > 0)   %>
+
+
+
+
+
+
+          <% for f in @files %>
+
+
+          <h5>Files attached:</h5>
+
+
+              <div style="margin-bottom: 5px;">
+               <% title = f.title.blank? ? f.attfile_file_name : f.title  %>
+              <!--image_path("/attachments/#{img.id}/#{false}")-->
+              <%=  image_tag("images/pdf_icon_tiny.jpg", :alt => title, :width => "20px" ) %>
+
+              <%= link_to title , f.attfile.url, :title => title ,:style => "margin-right: 10px;" , :class => "preview_file" , :id => "file#{f.id}" %>
+              <%#= link_to content_tag(:span) + image_tag("shireparents/pdf_icon_tiny.jpg", :alt => title, :width => "20px", :style => "float:left;" ) + " #{title} ", :controller => :attachments, :action => :get, :id => doc.id, :mimetype => doc.mimetype  %>
+
+              <%= link_to image_tag("close_pop.png", :width => "20px"), "/admin/detach_attachment/#{@article_id}/#{f.id}", :title => "Delete File" ,:style => "margin-right: 10px;" , :class => "delete_att" , :id => "att_delete#{f.id}" %>
+
+
+              </div>
+          <% end  %>
+
+
+    <% end %>
+
+
+</div>
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+        var opts = {
+            lines: 13, // The number of lines to draw
+            length: 7, // The length of each line
+            width: 4, // The line thickness
+            radius: 10, // The radius of the inner circle
+            corners: 1, // Corner roundness (0..1)
+            rotate: 0, // The rotation offset
+            color: '#000', // #rgb or #rrggbb
+            speed: 1, // Rounds per second
+            trail: 60, // Afterglow percentage
+            shadow: false, // Whether to render a shadow
+            hwaccel: false, // Whether to use hardware acceleration
+            className: 'spinner', // The CSS class to assign to the spinner
+            zIndex: 2e9, // The z-index (defaults to 2000000000)
+            top: 'auto', // Top position relative to parent in px
+            left: 'auto' // Left position relative to parent in px
+        };
+        var target = document.getElementById('spinner_detach_image');
+
+        var spinner;
+
+
+
+        $('.delete_att').click(function(){
+            //var image_id = $('#image_id').val();
+            //var image_title = $('#image_title').val();
+            $.ajaxSetup ({
+                cache: false
+            });
+            var articleId = <%=@article_id %>
+
+
+            spinner = new Spinner(opts).spin(target);
+            target.appendChild(spinner.el);
+
+            $.ajax({
+                type:'POST',
+                url:'/admin/detach_attachment',
+                data:{article_id: articleId, att_id:this.id, id_string:"att_delete"},
+                success:function (data) {
+                    if (data == 'OK') {
+
+                        spinner.stop();
+                        var loadUrl = "/admin/load_atts_for_article?article_id="+articleId;
+                        $("#image_preview").load(loadUrl);
+                    } else {
+
+                        spinner.stop();
+                        alert(data);
+                    }
+                }
+            });
+            return false;
+        });
+
+    });
+</script>
+
+
+<style>
+
+
+    .spinner {
+        position: relative;
+        left: 300px;
+        bottom: 20px;
+        margin-left: -32px; /* -1 * image width / 2 */
+        margin-top: -32px;  /* -1 * image height / 2 */
+        z-index: 99999999;
+    }
+
+
+</style>

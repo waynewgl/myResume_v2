@@ -1,0 +1,86 @@
+<ul class="dropdown">
+  <li><%= link_to "Resumes Circle", url_for(:controller => :site, :action => :index)%></li>
+  <li><%= link_to "Projects' Circle", url_for(:controller => :site, :action => :allProjects)%></li>
+  <% if !session[:user_login].nil? &&!session[:user_login_id].nil?  %>
+      <li><%= link_to "My Resume", {:controller => :resume, :action => :index, :user=>session[:user_login_id]} ,:id=>"bg_flash"%></li>
+  <% end %>
+  <% if !session[:user_login].nil? %>
+      <li>
+
+        <%= link_to "My Space", {:controller => :admin, :action => :myProject}, :id=>"bg_flash2" %>
+
+        <ul class="sub_menu">
+          <li style="position: relative;top: 5px;left: -5px;"><%= link_to "Projects", {:controller => :admin, :action => :myProject} %></li>
+          <li style="position: relative;top: 5px;left: -5px;"><%= link_to "Resume", {:controller => :admin, :action => :edit_profile} %></li>
+
+        </ul>
+
+
+      </li>
+  <% end %>
+  <li><%= link_to "Contact Me", {:controller => :resume, :action => :index, :user=>1} ,:id=>"bg_flash"%></li>
+
+</ul>
+
+
+
+
+
+<style>
+
+
+        /*
+            LEVEL ONE
+        */
+    ul.dropdown                         { position: relative; }
+    ul.dropdown li                      {  float: left; zoom: 1; background: #d3d3d3; }
+    ul.dropdown a:hover		            { color: #000; }
+    ul.dropdown a:active                { color: #ffa500; }
+    ul.dropdown li a                    { display: block;
+        color: #222; }
+    ul.dropdown li:last-child a         { border-right: none; } /* Doesn't work in IE */
+    ul.dropdown li.hover,
+    ul.dropdown li:hover                { background: #F3D673; color: black; position: relative; }
+    ul.dropdown li.hover a              { color: black; }
+
+
+        /*
+            LEVEL TWO
+        */
+    ul.dropdown ul {
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAIAAADZSiLoAAAAHElEQVQIHWP48+fP9+/f////zwCkgBwQC4ghAACODRqkCkEF0QAAAABJRU5ErkJggg==); /* Can replace this with any pattern or color */
+        width: 110px;
+        visibility: hidden;
+        position: absolute;
+        top:-5px;
+        left: -40px;
+        color: #000000;
+        border-radius: 20px;
+        border:1px solid #2c2b2b;
+        -webkit-box-shadow:0 0 32px #e6e8e8;
+        -moz-box-shadow:0 0 30px #e6e8e8;
+        box-shadow:0 0 30px #e6e8e8;
+        outline: 1px;
+
+
+
+    }
+    ul.dropdown ul li {
+
+        padding: 8px 1px;
+        height: 10px;
+        margin: auto;
+    }
+
+        /* IE 6 & 7 Needs Inline Block */
+    ul.dropdown ul li a					{ border-right: none; width: 100%; display: inline-block; }
+
+        /*
+            LEVEL THREE
+        */
+    ul.dropdown ul ul 					{ left: 100%; top: 10px; }
+    ul.dropdown li:hover > ul 			{ visibility: visible; }
+
+
+
+</style>

@@ -1,0 +1,276 @@
+.register,
+.login {
+	/* Structure */
+	width: 300px;
+	padding: 15px;
+	margin: 20px auto;
+	
+	/* Text */
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-weight: 300;
+    
+	/* Style */
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAIAAADZSiLoAAAAHElEQVQIHWP48+fP9+/f////zwCkgBwQC4ghAACODRqkCkEF0QAAAABJRU5ErkJggg==); /* Can replace this with any pattern or color */
+	border-radius: 5px;
+    border:1px solid #fafafa;
+    -webkit-box-shadow:0 0 6px #bbb;
+    -moz-box-shadow:0 0 5px #bbb;
+    box-shadow:0 0 5px #bbb;
+    outline: none;
+}
+
+.register h1,
+.login h1 {
+	/* Structure */
+	margin-top: 0;
+	margin-bottom: 15px;
+	
+	/* Text */
+	font-size: 30px;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-weight: 300;
+    
+    /* To center the title just uncomment the following line: */
+    /*text-align: center;*/
+}
+
+.register input,
+.login input {
+	/* Structure */
+	margin: 5px 0;
+	padding: 8px;
+	width: 100%;
+	box-sizing: border-box;
+	
+	/* Text */
+	font-size: 15px;
+
+	/* Style */
+	border: 1px solid #ccc;
+	border-radius: 3px;	
+		
+	/* Transitions */
+    		transition: all .25s ease-in-out;
+       -moz-transition: all .25s ease-in-out;
+        -ms-transition: all .25s ease-in-out;
+    -webkit-transition: all .25s ease-in-out;
+         -o-transition: all .25s ease-in-out;
+}
+
+.register input:focus,
+.login input:focus {
+	/* Style */
+    border:1px solid #fafafa;
+    outline: none;
+    -webkit-box-shadow: 0 0 6px #007eff;
+       -moz-box-shadow: 0 0 5px #007eff;
+       		box-shadow: 0 0 5px #007eff;   
+}		
+
+.register button,
+.login button {
+	/* Structure */
+	margin: 15px 0 0 0;
+	padding: 8px 6px;			
+	width: 100%;
+	
+	/* Text */
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-weight: 600;
+    font-size: 1.2em;
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.4);
+    
+    /* Style */
+    background-color: #2493ff;
+	background-image: linear-gradient(top, rgba(255,255,255,.5), rgba(255,255,255,0));
+    border: 1px solid #2493FF;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	box-shadow: 0 2px 1px rgba(0, 0, 0, .3), 0 1px 0 rgba(255, 255, 255, .5) inset;	
+	
+	/* Other */
+	overflow: visible;
+	display: inline-block;
+	cursor: pointer;
+	
+    /* Transitions */
+    		transition: background-color .15s ease-in-out;
+       -moz-transition: background-color .15s ease-in-out;
+        -ms-transition: background-color .15s ease-in-out;
+    -webkit-transition: background-color .15s ease-in-out;
+         -o-transition: background-color .15s ease-in-out;	  						  
+}
+
+.register button:hover,
+.login button:hover {
+	/* Style */
+  	background-color: #0282ff;
+        border-color: #007af0;
+}
+
+.register button:active,
+.login button:active {
+	/* Structure */
+	position: relative;
+	top: 3px;
+	
+	/* Style */
+	box-shadow: 0 1px 0 rgba(255, 255, 255, .3) inset;
+}
+
+/* ------------------------------------*\
+    $LABELS
+\*------------------------------------*/
+
+.register label,
+.login label {
+	/* To Show/Hide, simply toggle display to block or none */
+	display: none;
+	
+	/* Structure */
+	padding-top: 5px;
+	
+	/* Text */
+	text-align: left;
+	font-size: 14px;
+}
+
+
+/* ------------------------------------*\
+    $OTHER
+\*------------------------------------*/
+
+/* The 'Lock' */
+.register .secure,
+.login .secure {
+	float: right;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| OTHER COLORS:
+| * Simply add a color class such as 'green' to the form.
+|--------------------------------------------------------------------------
+*/
+
+/* ------------------------------------*\
+    $GREEN
+\*------------------------------------*/
+
+.register.green button,
+.login.green button {
+    background-color: #08de06;
+	border: 1px solid #08de06;
+}
+
+.register.green button:hover,
+.login.green button:hover {
+	background-color: #08cd05;
+	border: 1px solid #08cd05;
+}
+
+.register.green input:focus,
+.login.green input:focus {
+	 -webkit-box-shadow: 0 0 6px #08de06;
+     	-moz-box-shadow: 0 0 5px #08de06;
+     		 box-shadow: 0 0 5px #08de06;
+}
+
+
+/* ------------------------------------*\
+    $RED
+\*------------------------------------*/
+
+.register.red button,
+.login.red button {
+    background-color: #e00;
+	border: 1px solid #e00;
+}
+
+.register.red button:hover,
+.login.red button:hover {
+	background-color: #d00;
+	border: 1px solid #d00;
+}
+
+.register.red input:focus,
+.login.red input:focus {
+	 -webkit-box-shadow: 0 0 6px #e00;
+     	-moz-box-shadow: 0 0 5px #e00;
+     		 box-shadow: 0 0 5px #e00;
+}
+
+
+/* ------------------------------------*\
+    $ORANGE
+\*------------------------------------*/
+
+.register.orange button,
+.login.orange button {
+    background-color: #f36a06;
+	border: 1px solid #f36a06;
+}
+
+.register.orange button:hover,
+.login.orange button:hover {
+	background-color: #e26306;
+	border: 1px solid #e26306;
+}
+
+.register.orange input:focus,
+.login.orange input:focus {
+	 -webkit-box-shadow: 0 0 6px #f36a06;
+     	-moz-box-shadow: 0 0 5px #f36a06;
+     		 box-shadow: 0 0 5px #f36a06;
+}
+
+
+/* ------------------------------------*\
+    $YELLOW
+\*------------------------------------*/
+
+.register.yellow button,
+.login.yellow button {
+    background-color: #ee0;
+	border: 1px solid #ee0;
+}
+
+.register.yellow button:hover,
+.login.yellow button:hover {
+	background-color: #dd0;
+	border: 1px solid #dd0;
+}
+
+.register.yellow input:focus,
+.login.yellow input:focus {
+	 -webkit-box-shadow: 0 0 6px #ee0;
+     	-moz-box-shadow: 0 0 5px #ee0;
+     		 box-shadow: 0 0 5px #ee0;
+}
+
+
+/* ------------------------------------*\
+    $BLACK
+\*------------------------------------*/
+
+.register.black button,
+.login.black button {
+    background-color: #222;
+	border: 1px solid #222;
+}
+
+.register.black button:hover,
+.login.black button:hover {
+	background-color: #111;
+	border: 1px solid #111;
+}
+
+.register.black input:focus,
+.login.black input:focus {
+	 -webkit-box-shadow: 0 0 6px #222;
+     	-moz-box-shadow: 0 0 5px #222;
+     		 box-shadow: 0 0 5px #222;
+}

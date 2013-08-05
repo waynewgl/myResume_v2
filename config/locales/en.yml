@@ -1,0 +1,25 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  hello: "Hello world"
+
+
+  admin:
+
+    new-article:
+      create-error: "Error: Article could not be saved."
+    new-newsletter:
+      create-error: "Error: Newsletter could not be saved."
+
+    modify-category:
+      rename-error: "Error: Category could not be saved."
+
+    att-upload-dir: "upload/paperclip/attachments/attfiles/"
+    avatar-upload-dir: "upload/paperclip/users/user/"
+
+    home_title: "THE CV CLOUD"
+    site_intro: "  We provide the easiest way to create your personal online CV  with  fancy templates, all you need is
+                       Fill your detail, we will do the left for you...
+                       please login or register to experience
+                       the most effective path to your personalisation CV. ..."

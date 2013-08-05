@@ -1,0 +1,25 @@
+
+    <% if (!@user_avatar.nil? )   %>
+        <div id="gallery_wrapper">
+
+        <h5>Avatar attached:</h5>
+
+          <div id="gallery" >
+
+                <div style="margin-right: 5px;overflow: auto;width: 100%; margin-bottom: 20px;">
+
+                    <div style="margin-right: 10px;float:left;width: 130px;overflow: hidden;height: 140px;text-align: center;">
+                        <div style= "width:80%;float: left; margin-right: 5px; ">
+                            <%= link_to image_tag(@user_avatar.avatar.url(:small)),"#", :title => @user_avatar.avatar_file_name , :class => "myFancybox_file" %>
+
+                        </div>
+
+                    </div>
+
+                </div>
+          </div>
+        </div>
+
+    <% end %>
+
+

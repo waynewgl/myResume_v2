@@ -1,0 +1,11 @@
+
+
+<% if @user_avatar_ori.selected_style==1 %>
+
+    <%= render :partial => 'partials/resume/resume_detail_style1' -%>
+
+<% elsif @user_avatar_ori.selected_style==2%>
+    <%= render :partial => 'partials/resume/resume_detail_style2' -%>
+
+
+<%end%>
